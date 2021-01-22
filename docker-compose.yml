@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  selma.identityprovider.interfaces.rest:
+    image: ${DOCKER_REGISTRY-}selmaidentityproviderinterfacesrest
+    build:
+      context: .
+      dockerfile: Selma.IdentityProvider.Interfaces.REST/Dockerfile

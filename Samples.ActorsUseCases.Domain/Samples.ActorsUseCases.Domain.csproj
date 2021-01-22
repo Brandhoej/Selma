@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Selm.Core.Domain.Events\Selma.Core.Domain.Events.csproj" />
+    <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
