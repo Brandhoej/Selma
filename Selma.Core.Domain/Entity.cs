@@ -65,6 +65,18 @@ namespace Selma.Core.Domain
             Id = id;
         }
 
+        /// <summary>
+        ///     Returns a value indicating whether this <see cref="IEntity{TId}"/> 
+        ///     is equal to a specified <paramref name="obj"/>.
+        /// </summary>
+        /// <param name="obj">
+        ///     A <see cref="object"/> to compare with this 
+        ///     instance of <see cref="IEntity{TId}"/>.
+        /// </param>
+        /// <returns>
+        ///     True if <see cref="Equals(IEntity{TId})"/> returns true;
+        ///     otherwise, false.
+        /// </returns>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -80,39 +92,103 @@ namespace Selma.Core.Domain
             return Equals((Entity<TId>)obj);
         }
 
+        /// <summary>
+        ///     Returns a value indicating whether this <see cref="IEntity{TId}"/> 
+        ///     is equal to a specified <paramref name="other"/>
+        /// </summary>
+        /// <param name="other">
+        ///     A <see cref="IEntity{TId}"/> to compare with this 
+        ///     instance of <see cref="IEntity{TId}"/>.
+        /// </param>
+        /// <returns>
+        ///     True if <see cref="Equals(IEntity{TId})"/> returns true;
+        ///     otherwise, false.
+        /// </returns>
         public bool Equals(IEntity<TId> other)
         {
-            return other != null && other.Id.Equals(Id);
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (!ReferenceEquals(this, other))
+            {
+                return false;
+            }
+
+            if (GetHashCode() == other.GetHashCode())
+            {
+                return false;
+            }
+
+            if (!base.Equals(other))
+            {
+                return false;
+            }
+
+            return other.Id.Equals(Id);
         }
 
+        /// <summary>
+        ///     Returns the <see cref="int"/> hash code for the <see cref="Entity{TId}"/>.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="int"/> hash code.
+        /// </returns>
         public override int GetHashCode()
-        {
-            return Id.GetHashCode();
-        }
+            => Id.GetHashCode();
 
+        /// <summary>
+        ///     Returns a string representation of the <see cref="Entity{TId}"/>.
+        /// </summary>
+        /// <returns>
+        ///     A <see cref="string"/> representation.
+        /// </returns>
         public override string ToString()
-        {
-            return $"Entity<{Id}>";
-        }
+            => $"{GetType().Name} - Root '{Id}'";
 
-        public static bool operator !=(Entity<TId> a, Entity<TId> b)
-        {
-            return !(a == b);
-        }
+        /// <summary>
+        ///     Inequality operator implementation of the <see cref="Entity{TId}"/>.
+        /// </summary>
+        /// <param name="left">
+        ///     Left side of the inequality operator.
+        /// </param>
+        /// <param name="right">
+        ///     Right side of the inequality operator.
+        /// </param>
+        /// <returns>
+        ///     False if <paramref name="left"/> is equal to <paramref name="right"/>;
+        ///     otherwise, true.
+        /// </returns>
+        public static bool operator !=(Entity<TId> left, Entity<TId> right)
+            => !(left == right);
 
-        public static bool operator ==(Entity<TId> a, Entity<TId> b)
+        /// <summary>
+        ///     Equality operator implementation of the <see cref="Entity{TId}"/>.
+        /// </summary>
+        /// <param name="left">
+        ///     Left side of the equality operator.
+        /// </param>
+        /// <param name="right">
+        ///     Right side of the equality operator.
+        /// </param>
+        /// <returns>
+        ///     True if <paramref name="left"/> is equal to <paramref name="right"/>;
+        ///     otherwise, false.
+        /// </returns>
+        public static bool operator ==(Entity<TId> left, Entity<TId> right)
         {
-            if (a is null && b is null)
+            if (left is null && right is null)
             {
                 return false;
             }
 
-            if (a is null || b is null)
+            if (left is null || right is null)
             {
                 return false;
             }
 
-            return a.Equals(b);
+            return left.Equals(right);
         }
     }
 }

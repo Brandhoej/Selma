@@ -40,50 +40,15 @@ namespace Selma.Core.Domain
             : base(id)
         { }
 
-        /// <summary>
-        ///     Returns a value indicating whether this <see cref="EntityRoot{TId}"/> is equal to a specified <see cref="EntityRoot{TId}"/>.
-        /// </summary>
-        /// <param name="other">
-        ///     A <see cref="EntityRoot{TId}"/> to compare with this instance of <see cref="EntityRoot{TId}"/>.
-        /// </param>
-        /// <returns>
-        ///     True if <see cref="Equals(IEntityRoot{TId})"/> returns true;
-        ///     otherwise, false.
-        /// </returns>
-        public override bool Equals(object other)
-            => Equals(other);
+        /// <inheritdoc cref="Entity{TId}.Equals(object)"/>
+        public override bool Equals(object obj)
+            => base.Equals(obj);
 
-        /// <summary>
-        ///     Returns a value indicating whether this <see cref="EntityRoot{TId}"/> is equal to a specified <see cref="EntityRoot{TId}"/>.
-        /// </summary>
-        /// <param name="other">
-        ///     A <see cref="EntityRoot{TId}"/> to compare with this instance of <see cref="EntityRoot{TId}"/>.
-        /// </param>
-        /// <returns>
-        ///     True if <paramref name="other"/> is not null and types are the same and the <see cref="IEntity{TId}"/> are equal;
-        ///     otherwise, false.
-        /// </returns>
+        /// <inheritdoc cref="Entity{TId}.Equals(IEntity{TId})"/>
         public bool Equals(IEntityRoot<TId> other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
+            => base.Equals(other);
 
-            if (GetType() != other.GetType())
-            {
-                return false;
-            }
-
-            return Equals((IEntity<TId>)other);
-        }
-
-        /// <summary>
-        ///     Returns the <see cref="int"/> hash code for the <see cref="EntityRoot{TId}"/>.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="int"/> hash code.
-        /// </returns>
+        /// <inheritdoc cref=" Entity{TId}.GetHashCode"/>
         public override int GetHashCode()
             => base.GetHashCode();
 
@@ -100,10 +65,10 @@ namespace Selma.Core.Domain
         ///     Inequality operator implementation of the <see cref="EntityRoot{TId}"/>.
         /// </summary>
         /// <param name="left">
-        ///     Left side of the inequality operator
+        ///     Left side of the inequality operator.
         /// </param>
         /// <param name="right">
-        ///     Right side of the inequality operator
+        ///     Right side of the inequality operator.
         /// </param>
         /// <returns>
         ///     False if <paramref name="left"/> is equal to <paramref name="right"/>;
@@ -116,10 +81,10 @@ namespace Selma.Core.Domain
         ///     Equality operator implementation of the <see cref="EntityRoot{TId}"/>.
         /// </summary>
         /// <param name="left">
-        ///     Left side of the equality operator
+        ///     Left side of the equality operator.
         /// </param>
         /// <param name="right">
-        ///     Right side of the equality operator
+        ///     Right side of the equality operator.
         /// </param>
         /// <returns>
         ///     True if <paramref name="left"/> is equal to <paramref name="right"/>;
