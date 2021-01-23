@@ -1,9 +1,7 @@
-﻿using MediatR;
-using Samples.ActorsUseCases.Application.UseCases;
-using Selma.Core.Application;
-using System;
+﻿using System.Reflection;
 using System.Collections.Generic;
-using System.Reflection;
+using Selma.Core.Application;
+using MediatR;
 
 namespace Samples.ActorsUseCases.Application
 {

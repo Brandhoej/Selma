@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Selma.Core.Application;
 using Selma.Core.Domain.Events;
+using Selma.Core.Domain.Events.Abstractions;
 using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
-using Microsoft.Extensions.DependencyInjection;
 using MediatR;
-using Selma.Core.Domain.Events.Abstractions;
 
 namespace Samples.ActorsUseCases.CLI
 {
