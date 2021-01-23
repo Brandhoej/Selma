@@ -4,7 +4,7 @@ using System;
 
 namespace Selma.Core.Infrastructure.Persistent
 {
-    public abstract class AbstractRepositoryFactory<TContext> : IAbstractRepositoryFactory<TContext>
+    /*public abstract class AbstractRepositoryFactory<TContext> : IAbstractRepositoryFactory<TContext>
         where TContext : IContext
     {
         public IRepository<TEntity> Repository<TEntity>(TContext context)
@@ -13,5 +13,5 @@ namespace Selma.Core.Infrastructure.Persistent
 
         public abstract IRepository<TEntity, TId> Repository<TEntity, TId>(TContext context)
             where TEntity : class, IEntityRoot<TId>;
-    }
+    }*/
 }

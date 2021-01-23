@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Selma.Core.Infrastructure.Persistent.Abstractions\Selma.Core.Infrastructure.Persistent.Abstractions.csproj" />
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent.Abstractions\Selma.Core.Infrastructure.Persistent.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.Infrastructure\Selma.Core.Infrastructure.csproj" />
   </ItemGroup>
 

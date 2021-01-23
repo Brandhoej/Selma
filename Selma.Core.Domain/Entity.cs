@@ -45,7 +45,7 @@ namespace Selma.Core.Domain
             return Equals((Entity<TId>)obj);
         }
 
-        public bool Equals( IEntity<TId> other)
+        public bool Equals(IEntity<TId> other)
         {
             return other != null && other.Id.Equals(Id);
         }

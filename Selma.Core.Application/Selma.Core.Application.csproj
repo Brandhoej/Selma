@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Selma.Core.Application.Abstractions\Selma.Core.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\Selma.Core.Application.Abstractions\Selma.Core.Application.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
   </ItemGroup>
 
