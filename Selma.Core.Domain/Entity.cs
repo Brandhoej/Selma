@@ -2,29 +2,64 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Selma.Core.Domain
 {
+    /// <inheritdoc cref="IEntity"/>
     public abstract class Entity 
         : Entity<Guid>
     {
+        /// <summary>
+        ///     Initializes an <see cref="Entity"/> with a <see cref="Guid.NewGuid"/> 
+        ///     as the used Id for the <see cref="IIdentifiableDomainObject{TId}.Id"/>.
+        /// </summary>
         protected Entity()
             : this(Guid.NewGuid())
         { }
 
+        /// <summary>
+        ///     <inheritdoc cref="Entity{TId}.Entity(TId)"/>
+        /// </summary>
+        /// <param name="id">
+        ///     <inheritdoc cref="Entity{TId}.Entity(TId)"/>
+        /// </param>
         public Entity(Guid id)
             : base(id)
         { }
     }
 
+    /// <inheritdoc cref="IEntity{TId}"/>
     public abstract class Entity<TId> 
         : IEntity<TId>
     {
+        /// <summary>
+        ///     The unique id of the instanc with the type <typeparamref name="TId"/>.
+        ///     <list>
+        ///         <item>
+        ///             <see cref="KeyAttribute"/>
+        ///             <description>
+        ///                 Used to denote that the <see cref="Entity{TId}.Id"/> is the unique identity.
+        ///             </description>
+        ///         </item>
+        ///         <item>
+        ///             <see cref="DatabaseGeneratedAttribute"/>
+        ///             <description>
+        ///                 Since the <typeparamref name="TId"/> is not necessarily an <see cref="int"/>
+        ///                 then we have to enform the database to generate id explicitly.
+        ///             </description>
+        ///         </item>
+        ///     </list>
+        /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public TId Id { get; private set; }
 
+        /// <summary>
+        ///     Initializes an <see cref="Entity{TId}"/> with the Id of <typeparamref name="TId"/>.
+        /// </summary>
+        /// <param name="id">
+        ///     The id of the <see cref="Entity{TId}"/> as stored in the <see cref="IIdentifiableDomainObject{TId}"/>.
+        /// </param>
         public Entity(TId id)
         {
             Id = id;
@@ -60,6 +95,11 @@ namespace Selma.Core.Domain
             return $"Entity<{Id}>";
         }
 
+        public static bool operator !=(Entity<TId> a, Entity<TId> b)
+        {
+            return !(a == b);
+        }
+
         public static bool operator ==(Entity<TId> a, Entity<TId> b)
         {
             if (a is null && b is null)
@@ -73,11 +113,6 @@ namespace Selma.Core.Domain
             }
 
             return a.Equals(b);
-        }
-
-        public static bool operator !=(Entity<TId> a, Entity<TId> b)
-        {
-            return !(a == b);
         }
     }
 }

@@ -23,11 +23,6 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         protected IDeferredDomainEventDispatcher DeferredDomainEventHandler { get; }
 
-        public async ValueTask<int> SaveChangesAsync()
-        {
-            return await ((IContext)this).SaveChangesAsync(default);
-        }
-
         async ValueTask<int> IContext.SaveChangesAsync(CancellationToken cancellationToken)
         {
             try

@@ -114,10 +114,11 @@ namespace Selma.Core.Application
         ///     The <see cref="IUseCaseRequest{TResponse}"/> to do by the <see cref="Actor"/> or its <see cref="Successor"/>.
         /// </param>
         /// <param name="cancellationToken">
-        ///     Optional cancellation token for the <see cref="IUseCaseRequest{TResponse}"/> operation.
+        ///     Optional cancellation token for the <see cref="IUseCase{TRequest, TResponse}"/> operation.
         /// </param>
         /// <returns>
-        ///     The value type wrapper around the <see cref="Task"/>. The result type of which is <typeparamref name="TResponse"/>.
+        ///     The value type wrapper around the <see cref="TResponse"/>. 
+        ///     The result type of which is <typeparamref name="TResponse"/>.
         /// </returns>
         /// <exception cref="InvalidOperationException">
         ///     Mediator has no receiver for the <see cref="IUseCaseRequest{TResponse}"/>.
@@ -180,7 +181,7 @@ namespace Selma.Core.Application
         /// </summary>
         /// <returns>
         ///     By default <see cref="Enumerable.Empty{Type}"/>.
-        ///     It is possible to override this method to return specified <see cref="Assembly"/>.
+        ///     It is possible to override this method to return specified <see cref="Type"/>.
         /// </returns>
         public virtual IEnumerable<Type> GetSupportedUseCases()
             => Enumerable.Empty<Type>();

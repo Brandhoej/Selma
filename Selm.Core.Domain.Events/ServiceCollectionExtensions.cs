@@ -126,8 +126,32 @@ namespace Selma.Core.Domain.Events
         ///     A reference to the <paramref name="serviceCollection"/> after the operation has completed.
         /// </returns>
         public static IServiceCollection AddDomainEventQueue(this IServiceCollection serviceCollection)
+            => serviceCollection.AddDomainEventQueue(
+                serviceProvider => new DomainEventQueue());
+
+        /// <summary>
+        ///     Adds a <see cref="ServiceDescriptor.Scoped{TService, TImplementation}"/> with the service
+        ///     <see cref="IDomainEventQueue"/> and implementation <typeparamref name="TImplementation"/> and
+        ///     a <see cref="ServiceDescriptor.Scoped{TService, TImplementation}"/> with the service
+        ///     <see cref="IDomainEventQueuer"/> constructed by implicit conversion between the <see cref="IDomainEventQueue"/>
+        ///     which implements the <see cref="IDomainEventQueuer"/> interface.
+        /// </summary>
+        /// <typeparam name="TImplementation">
+        ///     The <see cref="IDomainEventQueue"/> implementation to add to the <see cref="IServiceCollection"/>.
+        /// </typeparam>
+        /// <param name="serviceCollection">
+        ///     The <see cref="IServiceCollection"/> to add the services for the <see cref="IDomainEventQueue"/> service.
+        /// </param>
+        /// <param name="domainQueueFactory">
+        ///     The factory method used to construct the <typeparamref name="TImplementation"/> object added to the <see cref="IServiceCollection"/>.
+        /// </param>
+        /// <returns>
+        ///     A reference to the <paramref name="serviceCollection"/> after the operation has completed.
+        /// </returns>
+        public static IServiceCollection AddDomainEventQueue<TImplementation>(this IServiceCollection serviceCollection, Func<IServiceProvider, TImplementation> domainQueueFactory)
+            where TImplementation : class, IDomainEventQueue
         {
-            serviceCollection.AddScoped<IDomainEventQueue, DomainEventQueue>();
+            serviceCollection.AddScoped<IDomainEventQueue, TImplementation>(domainQueueFactory);
             serviceCollection.AddScoped<IDomainEventQueuer>(
                 provider => provider.GetService<IDomainEventQueue>());
             return serviceCollection;

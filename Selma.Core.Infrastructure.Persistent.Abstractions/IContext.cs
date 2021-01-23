@@ -6,7 +6,6 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
     public interface IContext
     {
         int SaveChanges();
-        ValueTask<int> SaveChangesAsync();
         ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

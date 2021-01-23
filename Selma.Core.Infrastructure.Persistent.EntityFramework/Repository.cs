@@ -1,11 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Selma.Core.Domain;
 using Selma.Core.Domain.Abstractions;
-using Selma.Core.Infrastructure.Persistent.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,17 +33,17 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         private DbSet<TEntity> RootEntities { get; }
 
-        public TEntity Create( TEntity entity)
+        public TEntity Create(TEntity entity)
         {
             return RootEntities.Add(entity).Entity;
         }
 
-        public ValueTask<TEntity> CreateAsync( TEntity entity)
+        public ValueTask<TEntity> CreateAsync(TEntity entity)
         {
             return CreateAsync(entity, default);
         }
 
-        public ValueTask<TEntity> CreateAsync( TEntity entity, CancellationToken cancellationToken)
+        public ValueTask<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
         {
             try
             {
@@ -118,7 +115,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             }
         }
 
-        public TEntity Update( TEntity entity)
+        public TEntity Update(TEntity entity)
         {
             return RootEntities.Update(entity).Entity;
         }
@@ -135,7 +132,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         public TEntity Delete( TId key)
         {
-            TEntity entityToDelete = Read(key);
+           TEntity entityToDelete = Read(key);
             if (entityToDelete != null)
             {
                 return Delete(entityToDelete);
@@ -143,7 +140,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             throw new NullReferenceException($"Entity with the primary key {key} could nto be found");
         }
 
-        public TEntity Delete( TEntity entity)
+        public TEntity Delete(TEntity entity)
         {
             return RootEntities.Remove(entity).Entity;
         }

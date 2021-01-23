@@ -17,27 +17,27 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
         where TEntity 
         : IEntityRoot<TId>
     {
-        TEntity Create( TEntity entity);
-        ValueTask<TEntity> CreateAsync( TEntity entity);
-        ValueTask<TEntity> CreateAsync( TEntity entity, CancellationToken cancellationToken);
+       TEntity Create(TEntity entity);
+        ValueTask<TEntity> CreateAsync(TEntity entity);
+        ValueTask<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken);
         void CreateRange( IEnumerable<TEntity> entities);
-        void CreateRange( params TEntity[] entities);
+        void CreateRange( paramsTEntity[] entities);
         Task CreateRangeAsync( IEnumerable<TEntity> entities);
-        Task CreateRangeAsync( params TEntity[] entities);
+        Task CreateRangeAsync( paramsTEntity[] entities);
         Task CreateRangeAsync( IEnumerable<TEntity> entities, CancellationToken cancellationToken);
-        Task CreateRangeAsync( TEntity[] entities, CancellationToken cancellationToken);
+        Task CreateRangeAsync(TEntity[] entities, CancellationToken cancellationToken);
 
-        TEntity Read( TId key);
+       TEntity Read( TId key);
         ValueTask<TEntity> ReadAsync( TId key);
         ValueTask<TEntity> ReadAsync( TId key, CancellationToken cancellationToken);
         
-        TEntity Update( TEntity entity);
-        void UpdateRange( params TEntity[] entities);
+       TEntity Update(TEntity entity);
+        void UpdateRange( paramsTEntity[] entities);
         void UpdateRange( IEnumerable<TEntity> entities);
 
-        TEntity Delete( TId key);
-        TEntity Delete( TEntity entity);
-        void DeleteRange( params TEntity[] entities);
+       TEntity Delete( TId key);
+       TEntity Delete(TEntity entity);
+        void DeleteRange( paramsTEntity[] entities);
         void DeleteRange( IEnumerable<TEntity> entities);
     }
 }

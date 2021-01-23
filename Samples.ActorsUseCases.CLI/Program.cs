@@ -16,26 +16,47 @@ namespace Samples.ActorsUseCases.CLI
     {
         static void Main(string[] args)
         {
+            // If false then immediate dispatcher is used
+            const bool deferredEventDispatcher = true;
+
             ICollection<Profile> profiles = new List<Profile>();
 
             ServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
             serviceCollection.AddScoped(provider => profiles);
             serviceCollection.AddActor<User>();
-            serviceCollection.AddDomainEventQueue();
-            serviceCollection.AddDeferredDomainEventDispatcher();
+
+            if (deferredEventDispatcher)
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                serviceCollection.AddDomainEventQueue();
+                serviceCollection.AddDeferredDomainEventDispatcher();
+#pragma warning restore CS0162 // Unreachable code detected
+            }
+            else
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                serviceCollection.AddImmediateDomainEventDispatcher();
+#pragma warning restore CS0162 // Unreachable code detected
+            }
 
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-            IDeferredDomainEventDispatcher deferredDomainEventDispatcher = serviceProvider.GetService<IDeferredDomainEventDispatcher>();
             DomainEvent.Queuer = serviceProvider.GetService<IDomainEventQueuer>();
 
-            UserTest(serviceProvider.GetService<User>()).Wait();
-            deferredDomainEventDispatcher.DispatchAll().Wait();
+            UserActorSample(serviceProvider.GetService<User>()).Wait();
+
+            if (deferredEventDispatcher)
+            {
+#pragma warning disable CS0162 // Unreachable code detected
+                IDeferredDomainEventDispatcher deferredDomainEventDispatcher = serviceProvider.GetService<IDeferredDomainEventDispatcher>();
+                deferredDomainEventDispatcher.DispatchAll().Wait();
+#pragma warning restore CS0162 // Unreachable code detected
+            }
 
             Console.Read();
         }
 
-        public static async Task UserTest(User user)
+        public static async Task UserActorSample(User user)
         {
             RegisterProfileUseCaseRequest registerProfileUseCaseRequest = new RegisterProfileUseCaseRequest("Andreas K. Brandhøj", "andreasbrandhoej@hotmail.com");
             RegisterProfileUseCaseResponse registerProfileUseCaseResponse = await user.Do(registerProfileUseCaseRequest);
