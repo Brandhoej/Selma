@@ -11,5 +11,7 @@
     ///     has been requested and executed.
     /// </typeparam>
     public interface IUseCaseRequest<TResponse>
+        where TResponse
+        : class
     { }
 }

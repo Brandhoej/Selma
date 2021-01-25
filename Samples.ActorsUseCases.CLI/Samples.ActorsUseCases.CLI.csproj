@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Samples.ActorsUseCases.Application\Samples.ActorsUseCases.Application.csproj" />
+    <ProjectReference Include="..\Selma.Core.MessageQueue.Abstractions\Selma.Core.MessageQueue.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

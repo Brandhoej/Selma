@@ -124,6 +124,8 @@ namespace Selma.Core.Application
         ///     Mediator has no receiver for the <see cref="IUseCaseRequest{TResponse}"/>.
         /// </exception>
         public async ValueTask<TResponse> Do<TResponse>(IUseCaseRequest<TResponse> request, CancellationToken cancellationToken = default)
+            where TResponse
+            : class
         {
             if (SupportsUseCase<TResponse>())
             {
@@ -151,6 +153,8 @@ namespace Selma.Core.Application
         ///     True if the <see cref="Actor"/> supports the <see cref="IUseCase{TRequest, TResponse}"/> with the return type <typeparamref name="TResponse"/>; otherwise, false.
         /// </returns>
         public bool SupportsUseCase<TResponse>()
+            where TResponse
+            : class
         {
             Type responseUseCaseRequestType = typeof(IUseCaseRequest<TResponse>);
 
@@ -199,6 +203,8 @@ namespace Selma.Core.Application
         ///     True if the response of the <paramref name="useCase"/> is <typeparamref name="TResponse"/>; otherwise, false.
         /// </returns>
         private bool IsTypeASupportedUseCase<TResponse>(Type useCase)
+            where TResponse
+            : class
         {
             try
             {

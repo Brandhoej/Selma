@@ -16,5 +16,7 @@ namespace Selma.Core.Application
     public class UseCaseRequest<TResponse>
         : IUseCaseRequest<TResponse>
         , IRequest<TResponse>
+        where TResponse
+        : class
     { }
 }

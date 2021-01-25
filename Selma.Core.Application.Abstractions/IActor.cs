@@ -38,7 +38,9 @@ namespace Selma.Core.Application.Abstractions
         ///     The <see cref="ValueTask{TResponse}"/> wrapper around the <see cref="Task"/>. 
         ///     The result type of which is <typeparamref name="TResponse"/>.
         /// </returns>
-        ValueTask<TResponse> Do<TResponse>(IUseCaseRequest<TResponse> request, CancellationToken cancellationToken = default);
+        ValueTask<TResponse> Do<TResponse>(IUseCaseRequest<TResponse> request, CancellationToken cancellationToken = default)
+            where TResponse
+            : class;
 
         /// <summary>
         ///     Checks whether the <see cref="IActor"/> supports the <see cref="IUseCase{IUseCaseRequest{TResponse}, TResponse}"/> 
@@ -51,7 +53,9 @@ namespace Selma.Core.Application.Abstractions
         ///     True if the <see cref="IActor"/> supports the <see cref="IUseCase{TRequest, TResponse}"/> 
         ///     with the return type <typeparamref name="TResponse"/>; otherwise, false.
         /// </returns>
-        bool SupportsUseCase<TResponse>();
+        bool SupportsUseCase<TResponse>()
+            where TResponse
+            : class;
 
         /// <summary>
         ///     Enables other <see cref="IActor"/> specialization classes to define which <see cref="Enumerable.Empty{Assembly}"/> 

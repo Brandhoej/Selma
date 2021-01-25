@@ -5,7 +5,8 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
 {
     public interface IAbstractRepositoryFactory<TContext>
        where TContext 
-        : IContext
+        : class
+        , IContext
     {
         IRepository<TEntity> Repository<TEntity>(TContext context)
             where TEntity 

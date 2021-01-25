@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Selma.Core.Domain.Events.Abstractions;
+using Selma.Core.MessageQueue.Abstractions;
 using System;
 
 namespace Selma.Core.Domain.Events
@@ -14,40 +15,40 @@ namespace Selma.Core.Domain.Events
         , INotification
     {
         /// <summary>
-        ///     The singleton <see cref="IDomainEventQueuer"/> used by <see cref="IDomainEvent"/>.
+        ///     The singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/>.
         /// </summary>
         /// <value>
-        ///     Property <see cref="Queuer"/> represents the singleton <see cref="IDomainEventQueuer"/> used by <see cref="IDomainEvent"/>.
+        ///     Property <see cref="Producer"/> represents the singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/>.
         /// </value>
         /// <exception cref="InvalidOperationException">
-        ///     Thrown when someone tries to set the <see cref="Queuer"/> after it has already be set.
+        ///     Thrown when someone tries to set the <see cref="Producer"/> after it has already be set.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if the <c>value</c> is <c>null</c>.
         /// </exception>
-        public static IDomainEventQueuer Queuer
+        public static IMessageQueueProducer<IDomainEvent> Producer
         {
-            get => m_domainEventQueuer;
+            get => m_producer;
             set
             {
-                /// We must ensure that the queue does not break state rules by setting the <see cref="m_domainEventQueuer"/> multiple times.
-                if (m_domainEventQueuer != null)
+                /// We must ensure that the queue does not break state rules by setting the <see cref="m_producer"/> multiple times.
+                if (m_producer != null)
                 {
-                    throw new InvalidOperationException($"The static {nameof(Queuer)} for the {nameof(DomainEvent)} instances already has the value {m_domainEventQueuer.GetType().Name}");
+                    throw new InvalidOperationException($"The static {nameof(Producer)} for the {nameof(DomainEvent)} instances already has the value {m_producer.GetType().Name}");
                 }
-                m_domainEventQueuer = value ?? throw new ArgumentNullException(nameof(value), $"The value of the {nameof(Queuer)} can not be null");
+                m_producer = value ?? throw new ArgumentNullException(nameof(value), $"The value of the {nameof(Producer)} can not be null");
             }
         }
 
         /// <summary>
-        ///     The private backfield used to store the return value for <see cref="Queuer"/>.
+        ///     The private backfield used to store the return value for <see cref="Producer"/>.
         /// </summary>
-        private static IDomainEventQueuer m_domainEventQueuer;
+        private static IMessageQueueProducer<IDomainEvent> m_producer;
 
         /// <summary>
-        ///     Enques the current instance into the <see cref="Queuer"/>
+        ///     Enques the current instance into the <see cref="Producer"/>
         /// </summary>
         public void Enqueue()
-            => Queuer.Enqueue(this);
+            => Producer.Enqueue(this);
     }
 }

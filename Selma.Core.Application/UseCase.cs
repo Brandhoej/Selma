@@ -32,8 +32,11 @@ namespace Selma.Core.Application
     public abstract class UseCase<TRequest, TResponse> 
         : IUseCase<TRequest, TResponse>
         , IRequestHandler<TRequest, TResponse>
+        where TResponse
+        : class
         where TRequest 
-        : IUseCaseRequest<TResponse>
+        : class
+        , IUseCaseRequest<TResponse>
         , IRequest<TResponse>
     {
         /// <summary>

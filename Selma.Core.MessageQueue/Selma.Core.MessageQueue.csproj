@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selma.Core.Domain.Abstractions\Selma.Core.Domain.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.MessageQueue.Abstractions\Selma.Core.MessageQueue.Abstractions.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Selma.Core.Domain.Abstractions;
+using Selma.Core.Infrastructure.Persistent.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Threading;

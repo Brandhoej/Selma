@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Selm.Core.Domain.Events.Abstractions\Selma.Core.Domain.Events.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
+    <ProjectReference Include="..\Selma.Core.MessageQueue.MediatR\Selma.Core.MessageQueue.MediatR.csproj" />
   </ItemGroup>
 
 </Project>

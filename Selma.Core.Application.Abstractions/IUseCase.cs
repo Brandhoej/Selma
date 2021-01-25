@@ -16,6 +16,10 @@
     ///     to return after the execution of the task.
     /// </typeparam>
     public interface IUseCase<TRequest, TResponse>
-        where TRequest : IUseCaseRequest<TResponse>
+        where TResponse
+        : class
+        where TRequest
+        : class
+        , IUseCaseRequest<TResponse>
     { }
 }

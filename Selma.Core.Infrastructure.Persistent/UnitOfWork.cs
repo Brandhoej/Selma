@@ -7,7 +7,9 @@ using Selma.Core.Infrastructure.Persistent.Abstractions;
 namespace Selma.Core.Infrastructure.Persistent
 {
     public sealed class UnitOfWork<TContext> : IUnitOfWork<TContext>
-        where TContext : IContext
+        where TContext
+        : class
+        , IContext
     {
         public UnitOfWork(TContext context, IAbstractRepositoryFactory<TContext> abstractRepositoryFactory)
         {

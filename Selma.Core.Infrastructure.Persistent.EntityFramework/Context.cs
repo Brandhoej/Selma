@@ -3,7 +3,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Selma.Core.Infrastructure.Persistent.Abstractions;
-using Selma.Core.Domain.Events.Abstractions;
+using Selma.Core.MessageQueue.Abstractions;
+using Selma.Core.Infrastructure.Events.Abstractions;
 
 namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 {
@@ -16,18 +17,18 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             : this(default)
         { }
 
-        public Context(IDeferredDomainEventDispatcher deferredDomainEventHandler)
+        public Context(IDeferredMessageQueue<IIntegrationEvent> deferredMessageQueue)
         {
-            DeferredDomainEventHandler = deferredDomainEventHandler;
+            DeferredMessageQueue = deferredMessageQueue;
         }
 
-        protected IDeferredDomainEventDispatcher DeferredDomainEventHandler { get; }
+        protected IDeferredMessageQueue<IIntegrationEvent> DeferredMessageQueue { get; }
 
         async ValueTask<int> IContext.SaveChangesAsync(CancellationToken cancellationToken)
         {
             try
             {
-                await DeferredDomainEventHandler?.DispatchAll();
+                await DeferredMessageQueue?.Dispatch();
                 return await SaveChangesAsync(cancellationToken);
             }
             catch (Exception exception)

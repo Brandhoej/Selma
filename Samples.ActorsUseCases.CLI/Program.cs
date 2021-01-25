@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Selma.Core.Application;
 using Selma.Core.Domain.Events;
 using Selma.Core.Domain.Events.Abstractions;
+using Selma.Core.MessageQueue.Abstractions;
 using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
+using Microsoft.Extensions.DependencyInjection;
 using MediatR;
 
 namespace Samples.ActorsUseCases.CLI
@@ -29,7 +30,6 @@ namespace Samples.ActorsUseCases.CLI
             if (deferredEventDispatcher)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddDomainEventQueue();
                 serviceCollection.AddDeferredDomainEventDispatcher();
 #pragma warning restore CS0162 // Unreachable code detected
             }
@@ -41,15 +41,15 @@ namespace Samples.ActorsUseCases.CLI
             }
 
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-            DomainEvent.Queuer = serviceProvider.GetService<IDomainEventQueuer>();
+            DomainEvent.Producer = serviceProvider.GetService<IMessageQueueProducer<IDomainEvent>>();
 
             UserActorSample(serviceProvider.GetService<User>()).Wait();
 
             if (deferredEventDispatcher)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                IDeferredDomainEventDispatcher deferredDomainEventDispatcher = serviceProvider.GetService<IDeferredDomainEventDispatcher>();
-                deferredDomainEventDispatcher.DispatchAll().Wait();
+                IDeferredMessageQueue<IDomainEvent> deferredDomainEventDispatcher = serviceProvider.GetService<IDeferredMessageQueue<IDomainEvent>>();
+                deferredDomainEventDispatcher.Dispatch().Wait();
 #pragma warning restore CS0162 // Unreachable code detected
             }
 
