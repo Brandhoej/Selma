@@ -11,8 +11,7 @@ namespace Selma.Core.Domain
     ///     C#9 TODO: Make this a record to enforce immutability of reference types.
     /// </summary>
     public abstract class ValueObject 
-        : IDomainObject
-        , IValueObject
+        : IValueObject
         , IEquatable<ValueObject>
     {
         /// <summary>
@@ -26,19 +25,7 @@ namespace Selma.Core.Domain
         ///     otherwise, false.
         /// </returns>
         public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Equals((ValueObject)obj);
-        }
+            => new ValueObjectEqualityComparer().Equals(this, obj);
 
         /// <summary>
         ///     Returns a value indicating whether this <see cref="ValueObject"/> is equal to a specified <see cref="ValueObject"/>.
@@ -64,7 +51,6 @@ namespace Selma.Core.Domain
         /// </returns>
         public override int GetHashCode()
         {
-            int a = 10.GetHashCode();
             return GetEqualityComponents()
                 .Aggregate(new HashCode(), (hashCode, curr) =>
                 {

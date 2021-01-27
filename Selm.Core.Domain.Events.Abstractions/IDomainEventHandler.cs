@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Selma.Core.Domain.Events.Abstractions
@@ -10,6 +11,7 @@ namespace Selma.Core.Domain.Events.Abstractions
     ///     The <see cref="IDomainEvent"/> to handle.
     /// </typeparam>
     public interface IDomainEventHandler<T>
+        : IEquatable<IDomainEventHandler<T>>
         where T 
         : class
         , IDomainEvent

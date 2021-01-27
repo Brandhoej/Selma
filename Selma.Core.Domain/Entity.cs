@@ -5,7 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Selma.Core.Domain
 {
-    /// <inheritdoc cref="IEntity"/>
+    /// <summary>
+    ///     <inheritdoc cref="IEntity"/>
+    /// </summary>
     public abstract class Entity 
         : Entity<Guid>
     {
@@ -28,7 +30,12 @@ namespace Selma.Core.Domain
         { }
     }
 
-    /// <inheritdoc cref="IEntity{TId}"/>
+    /// <summary>
+    ///     <inheritdoc cref="IEntity{TId}"/>
+    /// </summary>
+    /// <typeparam name="TId">
+    ///     <inheritdoc cref="IEntity{TId}"/>
+    /// </typeparam>
     public abstract class Entity<TId> 
         : IEntity<TId>
     {
@@ -61,9 +68,7 @@ namespace Selma.Core.Domain
         ///     The id of the <see cref="Entity{TId}"/> as stored in the <see cref="IIdentifiableDomainObject{TId}"/>.
         /// </param>
         public Entity(TId id)
-        {
-            Id = id;
-        }
+            => Id = id;
 
         /// <summary>
         ///     Returns a value indicating whether this <see cref="IEntity{TId}"/> 
@@ -78,19 +83,7 @@ namespace Selma.Core.Domain
         ///     otherwise, false.
         /// </returns>
         public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Equals((Entity<TId>)obj);
-        }
+            => new EntityEqualityComparer<TId>().Equals(this, obj);
 
         /// <summary>
         ///     Returns a value indicating whether this <see cref="IEntity{TId}"/> 
@@ -105,29 +98,7 @@ namespace Selma.Core.Domain
         ///     otherwise, false.
         /// </returns>
         public bool Equals(IEntity<TId> other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-
-            if (!ReferenceEquals(this, other))
-            {
-                return false;
-            }
-
-            if (GetHashCode() == other.GetHashCode())
-            {
-                return false;
-            }
-
-            if (!base.Equals(other))
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id);
-        }
+            => new EntityEqualityComparer<TId>().Equals(this, other);
 
         /// <summary>
         ///     Returns the <see cref="int"/> hash code for the <see cref="Entity{TId}"/>.
@@ -160,7 +131,7 @@ namespace Selma.Core.Domain
         ///     False if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, true.
         /// </returns>
-        public static bool operator !=(Entity<TId> left, Entity<TId> right)
+        public static bool operator !=(Entity<TId> left, IEntity<TId> right)
             => !(left == right);
 
         /// <summary>
@@ -176,7 +147,7 @@ namespace Selma.Core.Domain
         ///     True if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, false.
         /// </returns>
-        public static bool operator ==(Entity<TId> left, Entity<TId> right)
+        public static bool operator ==(Entity<TId> left, IEntity<TId> right)
         {
             if (left is null && right is null)
             {

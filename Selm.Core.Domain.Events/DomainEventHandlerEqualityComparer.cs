@@ -1,13 +1,17 @@
-﻿using Selma.Core.Application.Abstractions;
-using System;
+﻿using MediatR;
+using Selma.Core.Domain.Events.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Selma.Core.Application
+namespace Selma.Core.Domain.Events
 {
-    internal class ActorEqualityComparer
-        : IEqualityComparer
-        , IEqualityComparer<IActor>
+    internal class DomainEventHandlerEqualityComparer<T>
+        : IEqualityComparer<IDomainEventHandler<T>>
+        , IEqualityComparer
+        where T
+        : class
+        , IDomainEvent
+        , INotification
     {
         public new bool Equals(object x, object y)
         {
@@ -21,10 +25,10 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return Equals(x as IActor, y as IActor);
+            return Equals(x as IDomainEventHandler<T>, y as IDomainEventHandler<T>);
         }
 
-        public bool Equals(IActor x, IActor y)
+        public bool Equals(IDomainEventHandler<T> x, IDomainEventHandler<T> y)
         {
             if (x == null || y == null)
             {
@@ -41,19 +45,13 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return x.Successor == null && y.Successor == null ||
-                x.Successor.Equals(y.Successor);
+            return true;
         }
 
         public int GetHashCode(object obj)
-            => obj.GetHashCode();
+            => GetHashCode(obj as IDomainEventHandler<T>);
 
-        public int GetHashCode(IActor obj)
-        {
-            HashCode hashCode = new HashCode();
-            hashCode.Add(this);
-            hashCode.Add(obj.Successor);
-            return hashCode.ToHashCode();
-        }
+        public int GetHashCode(IDomainEventHandler<T> obj)
+            => obj.GetHashCode();
     }
 }

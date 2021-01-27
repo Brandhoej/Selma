@@ -1,13 +1,12 @@
-﻿using Selma.Core.Application.Abstractions;
-using System;
+﻿using Selma.Core.Domain.Events.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Selma.Core.Application
+namespace Selma.Core.Domain.Events
 {
-    internal class ActorEqualityComparer
-        : IEqualityComparer
-        , IEqualityComparer<IActor>
+    internal class DomainEventEqualityComparer
+        : IEqualityComparer<IDomainEvent>
+        , IEqualityComparer
     {
         public new bool Equals(object x, object y)
         {
@@ -21,10 +20,10 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return Equals(x as IActor, y as IActor);
+            return Equals(x as IDomainEvent, y as IDomainEvent);
         }
 
-        public bool Equals(IActor x, IActor y)
+        public bool Equals(IDomainEvent x, IDomainEvent y)
         {
             if (x == null || y == null)
             {
@@ -41,19 +40,13 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return x.Successor == null && y.Successor == null ||
-                x.Successor.Equals(y.Successor);
+            return true;
         }
 
         public int GetHashCode(object obj)
-            => obj.GetHashCode();
+            => GetHashCode(obj as IDomainEvent);
 
-        public int GetHashCode(IActor obj)
-        {
-            HashCode hashCode = new HashCode();
-            hashCode.Add(this);
-            hashCode.Add(obj.Successor);
-            return hashCode.ToHashCode();
-        }
+        public int GetHashCode(IDomainEvent obj)
+            => obj.GetHashCode();
     }
 }

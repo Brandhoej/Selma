@@ -3,7 +3,9 @@ using System;
 
 namespace Selma.Core.Domain
 {
-    /// <inheritdoc cref="IEntityRoot"/>
+    /// <summary>
+    ///     <inheritdoc cref="IEntityRoot"/>
+    /// </summary>
     public abstract class EntityRoot 
         : EntityRoot<Guid>
     {
@@ -25,7 +27,12 @@ namespace Selma.Core.Domain
         { }
     }
 
-    /// <inheritdoc cref="IEntityRoot{TId}"/>
+    /// <summary>
+    ///     <inheritdoc cref="IEntityRoot{TId}"/>
+    /// </summary>
+    /// <typeparam name="TId">
+    ///     <inheritdoc cref="IEntityRoot{TId}"/>
+    /// </typeparam>
     public abstract class EntityRoot<TId> 
         : Entity<TId>
         , IEntityRoot<TId>
@@ -40,15 +47,36 @@ namespace Selma.Core.Domain
             : base(id)
         { }
 
-        /// <inheritdoc cref="Entity{TId}.Equals(object)"/>
+        /// <summary>
+        ///     <inheritdoc cref="Entity{TId}.Equals(object)"/>
+        /// </summary>
+        /// <param name="obj">
+        ///     <inheritdoc cref="Entity{TId}.Equals(object)"/>
+        /// </param>
+        /// <returns>
+        ///     <inheritdoc cref="Entity{TId}.Equals(object)"/>
+        /// </returns>
         public override bool Equals(object obj)
             => base.Equals(obj);
 
-        /// <inheritdoc cref="Entity{TId}.Equals(IEntity{TId})"/>
+        /// <summary>
+        ///     <inheritdoc cref="Entity{TId}.Equals(IEntity{TId})"/>
+        /// </summary>
+        /// <param name="other">
+        ///     <inheritdoc cref="Entity{TId}.Equals(IEntity{TId})"/>
+        /// </param>
+        /// <returns>
+        ///     <inheritdoc cref="Entity{TId}.Equals(IEntity{TId})"/>
+        /// </returns>
         public bool Equals(IEntityRoot<TId> other)
             => base.Equals(other);
 
-        /// <inheritdoc cref=" Entity{TId}.GetHashCode"/>
+        /// <summary>
+        ///     <inheritdoc cref=" Entity{TId}.GetHashCode"/>
+        /// </summary>
+        /// <returns>
+        ///     <inheritdoc cref=" Entity{TId}.GetHashCode"/>
+        /// </returns>
         public override int GetHashCode()
             => base.GetHashCode();
 

@@ -66,22 +66,17 @@ namespace Selma.Core.Application
         /// </returns>
         public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
 
-        public static bool operator !=(UseCase<TRequest, TResponse> left, UseCase<TRequest, TResponse> right)
+        public static bool operator !=(UseCase<TRequest, TResponse> left, IUseCase<TRequest, TResponse> right)
             => !(left == right);
 
-        public static bool operator ==(UseCase<TRequest, TResponse> left, UseCase<TRequest, TResponse> right)
+        public static bool operator ==(UseCase<TRequest, TResponse> left, IUseCase<TRequest, TResponse> right)
         {
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-
-            if (left is null)
+            if (left is null && right is null)
             {
                 return false;
             }
 
-            if (left is null)
+            if (left is null || right is null)
             {
                 return false;
             }

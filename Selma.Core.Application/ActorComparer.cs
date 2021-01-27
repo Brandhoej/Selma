@@ -14,14 +14,15 @@ namespace Selma.Core.Application
 
         public int Compare(IActor x, IActor y)
         {
-            ICollection<IActor> common = new HashSet<IActor>(x.Intersect(y));
+            ICollection<IActor> common = new List<IActor>(x.Intersect(y));
 
+            /// If the <see cref="ICollection.Count"/> of <see cref="common"/> is 0, then they are disjoint.
             if (common.Count == 0)
             {
                 return 0;
             }
 
-            // If the first common is closest to this then 1; otherwise, -1.
+            /// If the first <see cref="common"/> is closest to <see cref="this"/> then 1; otherwise, -1.
             IActor closests = common.First();
             return Distance(closests, x).CompareTo(Distance(closests, y));
         }

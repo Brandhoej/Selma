@@ -50,5 +50,39 @@ namespace Selma.Core.Domain.Events
         /// </summary>
         public void Enqueue()
             => Producer.Enqueue(this);
+
+        public override bool Equals(object obj)
+            => new DomainEventEqualityComparer().Equals(this, obj);
+
+        public bool Equals(IDomainEvent other)
+            => new DomainEventEqualityComparer().Equals(this, other);
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        public static bool operator !=(DomainEvent left, IDomainEvent right)
+            => !(left == right);
+
+        public static bool operator ==(DomainEvent left, IDomainEvent right)
+        {
+            if (left is null && right is null)
+            {
+                return false;
+            }
+
+            if (left is null || right is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
     }
 }

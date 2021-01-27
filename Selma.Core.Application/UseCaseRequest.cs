@@ -31,22 +31,17 @@ namespace Selma.Core.Application
         public override string ToString()
             => base.ToString();
 
-        public static bool operator !=(UseCaseRequest<TResponse> left, UseCaseRequest<TResponse> right)
+        public static bool operator !=(UseCaseRequest<TResponse> left, IUseCaseRequest<TResponse> right)
             => !(left == right);
 
-        public static bool operator ==(UseCaseRequest<TResponse> left, UseCaseRequest<TResponse> right)
+        public static bool operator ==(UseCaseRequest<TResponse> left, IUseCaseRequest<TResponse> right)
         {
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-
-            if (left is null)
+            if (left is null && right is null)
             {
                 return false;
             }
 
-            if (left is null)
+            if (left is null || right is null)
             {
                 return false;
             }

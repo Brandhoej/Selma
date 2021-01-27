@@ -1,5 +1,6 @@
 ﻿using Selma.Core.Domain.Abstractions;
 using Selma.Core.MessageQueue.Abstractions;
+using System;
 
 namespace Selma.Core.Domain.Events.Abstractions
 {
@@ -8,6 +9,7 @@ namespace Selma.Core.Domain.Events.Abstractions
     /// </summary>
     public interface IDomainEvent
         : IDomainObject
+        , IEquatable<IDomainEvent>
         , IMessage
     {
         /// <summary>

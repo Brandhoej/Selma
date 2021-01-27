@@ -364,22 +364,17 @@ namespace Selma.Core.Application
             return supportedUseCases;
         }
 
-        public static bool operator !=(Actor left, Actor right)
+        public static bool operator !=(Actor left, IActor right)
             => !(left == right);
 
-        public static bool operator ==(Actor left, Actor right)
+        public static bool operator ==(Actor left, IActor right)
         {
-            if (ReferenceEquals(left, right))
-            {
-                return true;
-            }
-
-            if (left is null)
+            if (left is null && right is null)
             {
                 return false;
             }
 
-            if (left is null)
+            if (left is null || right is null)
             {
                 return false;
             }
@@ -387,16 +382,16 @@ namespace Selma.Core.Application
             return left.Equals(right);
         }
 
-        public static bool operator >=(Actor left, Actor right)
+        public static bool operator >=(Actor left, IActor right)
             => left == right || left > right;
 
-        public static bool operator >(Actor left, Actor right)
+        public static bool operator >(Actor left, IActor right)
             => left.CompareTo(right) > 0;
 
-        public static bool operator <=(Actor left, Actor right)
+        public static bool operator <=(Actor left, IActor right)
             => left == right || left < right;
 
-        public static bool operator <(Actor left, Actor right)
+        public static bool operator <(Actor left, IActor right)
             => left.CompareTo(right) < 0;
     }
 }
