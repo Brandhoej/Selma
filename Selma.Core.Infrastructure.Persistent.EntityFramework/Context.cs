@@ -18,9 +18,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         { }
 
         public Context(IDeferredMessageQueue<IIntegrationEvent> deferredMessageQueue)
-        {
-            DeferredMessageQueue = deferredMessageQueue;
-        }
+            => DeferredMessageQueue = deferredMessageQueue;
 
         protected IDeferredMessageQueue<IIntegrationEvent> DeferredMessageQueue { get; }
 
@@ -36,5 +34,17 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
                 return await new ValueTask<int>(Task.FromException<int>(exception));
             }
         }
+
+        public override bool Equals(object obj)
+            => new ContextEqualityComparer().Equals(this, obj);
+
+        public bool Equals(IContext other)
+            => new ContextEqualityComparer().Equals(this, other);
+
+        public override int GetHashCode()
+            => base.GetHashCode();
+
+        public override string ToString()
+            => base.ToString();
     }
 }

@@ -6,6 +6,7 @@ using Selma.Core.Domain.Abstractions;
 namespace Selma.Core.Infrastructure.Persistent.Abstractions
 {
     public interface IUnitOfWork<TContext>
+        : IEquatable<IUnitOfWork<TContext>>
         where TContext 
         : IContext
     {

@@ -4,7 +4,8 @@ using System;
 namespace Selma.Core.Infrastructure.Persistent.Abstractions
 {
     public interface IAbstractRepositoryFactory<TContext>
-       where TContext 
+        : IEquatable<IAbstractRepositoryFactory<TContext>>
+        where TContext 
         : class
         , IContext
     {

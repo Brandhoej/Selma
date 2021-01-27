@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Selma.Core.Domain.Abstractions;
@@ -15,6 +14,7 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
     { }
 
     public interface IRepository<TEntity, TId>
+        : IEquatable<IRepository<TEntity, TId>>
         where TEntity 
         : class
         , IEntityRoot<TId>

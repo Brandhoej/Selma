@@ -51,6 +51,7 @@ namespace Samples.ActorsUseCases.CLI
 #pragma warning restore CS0162 // Unreachable code detected
             }
 
+            Console.WriteLine($"There is {serviceProvider.GetService<ICollection<Profile>>().Count} profile(s)");
             Console.Read();
         }
 
@@ -59,13 +60,14 @@ namespace Samples.ActorsUseCases.CLI
             RegisterProfileUseCaseRequest registerProfileUseCaseRequest = new RegisterProfileUseCaseRequest("Andreas K. Brandhøj", "andreasbrandhoej@hotmail.com");
             RegisterProfileUseCaseResponse registerProfileUseCaseResponse = await user.Do(registerProfileUseCaseRequest);
 
+            Console.WriteLine($"{nameof(registerProfileUseCaseResponse.ProfileId)} = {registerProfileUseCaseResponse.ProfileId}");
+
             ActivateProfileUseCaseRequest activateProfileUseCaseRequest = new ActivateProfileUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             await user.Do(activateProfileUseCaseRequest);
             
             GetProfileInformationUseCaseRequest getProfileInformationUseCaseRequest = new GetProfileInformationUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             GetProfileInformationUseCaseResponse getProfileInformationUseCaseResponse = await user.Do(getProfileInformationUseCaseRequest);
 
-            Console.WriteLine($"{nameof(registerProfileUseCaseResponse.ProfileId)} = {registerProfileUseCaseResponse.ProfileId}");
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Name)} = {getProfileInformationUseCaseResponse.Name}");
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Email)} = {getProfileInformationUseCaseResponse.Email}");
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Activated)} = {getProfileInformationUseCaseResponse.Activated}");

@@ -28,21 +28,15 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         , IEntityRoot<TId>
     {
         public Repository(DbSet<TEntity> rootEntities)
-        {
-            RootEntities = rootEntities;
-        }
+            => RootEntities = rootEntities;
 
         private DbSet<TEntity> RootEntities { get; }
 
         public TEntity Create(TEntity entity)
-        {
-            return RootEntities.Add(entity).Entity;
-        }
+            => RootEntities.Add(entity).Entity;
 
         public ValueTask<TEntity> CreateAsync(TEntity entity)
-        {
-            return CreateAsync(entity, default);
-        }
+            => CreateAsync(entity, default);
 
         public ValueTask<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken)
         {
@@ -57,32 +51,22 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             }
         }
 
-        public void CreateRange( IEnumerable<TEntity> entities)
-        {
-            CreateRange(entities);
-        }
+        public void CreateRange(IEnumerable<TEntity> entities)
+            => CreateRange(entities);
 
-        public void CreateRange( params TEntity[] entities)
-        {
-            RootEntities.AddRangeAsync(entities);
-        }
+        public void CreateRange(params TEntity[] entities)
+            => RootEntities.AddRangeAsync(entities);
 
-        public Task CreateRangeAsync( IEnumerable<TEntity> entities)
-        {
-            return CreateRangeAsync(entities);
-        }
+        public Task CreateRangeAsync(IEnumerable<TEntity> entities)
+            => CreateRangeAsync(entities);
 
-        public Task CreateRangeAsync( params TEntity[] entities)
-        {
-            return CreateRangeAsync(entities);
-        }
+        public Task CreateRangeAsync(params TEntity[] entities)
+            => CreateRangeAsync(entities);
 
-        public Task CreateRangeAsync( IEnumerable<TEntity> entities, CancellationToken cancellationToken)
-        {
-            return CreateRangeAsync(entities, cancellationToken);
-        }
+        public Task CreateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken)
+            => CreateRangeAsync(entities, cancellationToken);
 
-        public Task CreateRangeAsync( TEntity[] entities, CancellationToken cancellationToken)
+        public Task CreateRangeAsync(TEntity[] entities, CancellationToken cancellationToken)
         {
             try
             {
@@ -94,17 +78,13 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             }
         }
 
-        public TEntity Read( TId key)
-        {
-            return RootEntities.Find(key);
-        }
+        public TEntity Read(TId key)
+            => RootEntities.Find(key);
 
-        public ValueTask<TEntity> ReadAsync( TId key)
-        {
-            return ReadAsync(key, default);
-        }
+        public ValueTask<TEntity> ReadAsync(TId key)
+            => ReadAsync(key, default);
 
-        public ValueTask<TEntity> ReadAsync( TId key, CancellationToken cancellationToken)
+        public ValueTask<TEntity> ReadAsync(TId key, CancellationToken cancellationToken)
         {
             try
             {
@@ -117,21 +97,15 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         }
 
         public TEntity Update(TEntity entity)
-        {
-            return RootEntities.Update(entity).Entity;
-        }
+            => RootEntities.Update(entity).Entity;
 
-        public void UpdateRange( params TEntity[] entities)
-        {
-            UpdateRange(entities);
-        }
+        public void UpdateRange(params TEntity[] entities)
+            => UpdateRange(entities);
 
-        public void UpdateRange( IEnumerable<TEntity> entities)
-        {
-            RootEntities.UpdateRange(entities);
-        }
+        public void UpdateRange(IEnumerable<TEntity> entities)
+            => RootEntities.UpdateRange(entities);
 
-        public TEntity Delete( TId key)
+        public TEntity Delete(TId key)
         {
            TEntity entityToDelete = Read(key);
             if (entityToDelete != null)
@@ -142,18 +116,12 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         }
 
         public TEntity Delete(TEntity entity)
-        {
-            return RootEntities.Remove(entity).Entity;
-        }
+            => RootEntities.Remove(entity).Entity;
 
-        public void DeleteRange( IEnumerable<TEntity> entities)
-        {
-            DeleteRange(entities);
-        }
+        public void DeleteRange(IEnumerable<TEntity> entities)
+            => DeleteRange(entities);
 
-        public void DeleteRange( params TEntity[] entities)
-        {
-            RootEntities.RemoveRange(entities);
-        }
+        public void DeleteRange(params TEntity[] entities)
+            => RootEntities.RemoveRange(entities);
     }
 }
