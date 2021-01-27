@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selma.Core.MessageQueue\Selma.Core.MessageQueue.csproj" />
+    <ProjectReference Include="..\Selma.Core.MessageQueue.Abstractions\Selma.Core.MessageQueue.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.MessageQueue\Selma.Core.MessageQueue.csproj">
+      <PrivateAssets></PrivateAssets>
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

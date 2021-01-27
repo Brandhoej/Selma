@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Selma.Core.Application.Abstractions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -101,6 +102,8 @@ namespace Selma.Core.Application
         /// </summary>
         private IDictionary<Type, bool> SupportedUseCaseCacheHits { get; }
 
+        public int Count => (this as IEnumerable<IActor>).Count();
+
         /// <summary>
         ///     Applies a use case to the <see cref="Actor"/> through a <see cref="IUseCaseRequest{TResponse}"/>.
         ///     If the <see cref="IUseCaseRequest{TResponse}"/> is not supported by the <see cref="IActor"/>
@@ -167,6 +170,30 @@ namespace Selma.Core.Application
 
             return isSupported;
         }
+
+        public override bool Equals(object obj)
+            => new ActorEqualityComparer().Equals(this, obj);
+
+        public bool Equals(IActor other)
+            => new ActorEqualityComparer().Equals(this, other);
+
+        public IEnumerator<IActor> GetEnumerator()
+            => new ActorEnumerator(this);
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
+
+        public int CompareTo(object obj)
+            => new ActorComparer().Compare(this, obj);
+
+        public int CompareTo(IActor other)
+            => new ActorComparer().Compare(this, other);
+
+        public override int GetHashCode()
+            => new ActorEqualityComparer().GetHashCode(this);
+
+        public override string ToString()
+            => base.ToString();
 
         /// <summary>
         ///     Enables other <see cref="Actor"/> specialization classes to define which <see cref="Enumerable.Empty{Assembly}"/> 
@@ -336,5 +363,40 @@ namespace Selma.Core.Application
 
             return supportedUseCases;
         }
+
+        public static bool operator !=(Actor left, Actor right)
+            => !(left == right);
+
+        public static bool operator ==(Actor left, Actor right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (left is null)
+            {
+                return false;
+            }
+
+            if (left is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator >=(Actor left, Actor right)
+            => left == right || left > right;
+
+        public static bool operator >(Actor left, Actor right)
+            => left.CompareTo(right) > 0;
+
+        public static bool operator <=(Actor left, Actor right)
+            => left == right || left < right;
+
+        public static bool operator <(Actor left, Actor right)
+            => left.CompareTo(right) < 0;
     }
 }

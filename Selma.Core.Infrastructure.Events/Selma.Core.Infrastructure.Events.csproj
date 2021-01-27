@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.MessageQueue.Kafka\Selma.Core.MessageQueue.Kafka.csproj" />
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets></IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.MessageQueue.Kafka\Selma.Core.MessageQueue.Kafka.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

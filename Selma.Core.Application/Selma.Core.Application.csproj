@@ -5,14 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="9.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="SimpleInjector" Version="5.2.0" />
+    <PackageReference Include="MediatR" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selma.Core.Application.Abstractions\Selma.Core.Application.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
+    <ProjectReference Include="..\Selma.Core.Application.Abstractions\Selma.Core.Application.Abstractions.csproj">
+      <PrivateAssets></PrivateAssets>
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

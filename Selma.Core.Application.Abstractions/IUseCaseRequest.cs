@@ -1,4 +1,6 @@
-﻿namespace Selma.Core.Application.Abstractions
+﻿using System;
+
+namespace Selma.Core.Application.Abstractions
 {
     /// <summary>
     ///     Represents the input of a <see cref="IUseCase{TRequest, TResponse}"/> 
@@ -11,6 +13,7 @@
     ///     has been requested and executed.
     /// </typeparam>
     public interface IUseCaseRequest<TResponse>
+        : IEquatable<IUseCaseRequest<TResponse>>
         where TResponse
         : class
     { }

@@ -5,15 +5,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selm.Core.Domain.Events.Abstractions\Selma.Core.Domain.Events.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent.Abstractions\Selma.Core.Infrastructure.Persistent.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent\Selma.Core.Infrastructure.Persistent.csproj" />
-    <ProjectReference Include="..\Selma.Core.MessageQueue.Abstractions\Selma.Core.MessageQueue.Abstractions.csproj" />
+    <ProjectReference Include="..\Selm.Core.Domain.Events.Abstractions\Selma.Core.Domain.Events.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.Domain.Abstractions\Selma.Core.Domain.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent.Abstractions\Selma.Core.Infrastructure.Persistent.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent\Selma.Core.Infrastructure.Persistent.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.MessageQueue.Abstractions\Selma.Core.MessageQueue.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

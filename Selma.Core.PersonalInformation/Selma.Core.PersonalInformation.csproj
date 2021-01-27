@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selma.Core.PersonalInformation.Abstractions\Selma.Core.PersonalInformation.Abstractions.csproj" />
+    <ProjectReference Include="..\Selma.Core.PersonalInformation.Abstractions\Selma.Core.PersonalInformation.Abstractions.csproj">
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

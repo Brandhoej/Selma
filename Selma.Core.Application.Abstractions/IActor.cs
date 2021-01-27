@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,12 @@ namespace Selma.Core.Application.Abstractions
     ///     The <see cref="IActor"/> does not support the usage of MediatR out of the box.
     /// </summary>
     public interface IActor
+        : IEquatable<IActor>
+        , IComparable
+        , IComparable<IActor>
+        , IEnumerable
+        , IEnumerable<IActor>
+        , IReadOnlyCollection<IActor>
     {
         /// <summary>
         ///     The next link in the chain of responsibility.

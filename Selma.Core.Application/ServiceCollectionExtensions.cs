@@ -24,8 +24,7 @@ namespace Selma.Core.Application
         /// </returns>
         public static IServiceCollection AddActor<TActorImplementation>(this IServiceCollection serviceCollection)
             where TActorImplementation
-            : class
-            , IActor
+            : Actor
             => serviceCollection.AddScoped<TActorImplementation>();
 
         /// <summary>
@@ -49,8 +48,7 @@ namespace Selma.Core.Application
             : class
             , TActorService
             where TActorService
-            : class
-            , IActor
+            : Actor
             => serviceCollection.AddScoped<TActorService, TActorImplementation>();
 
         /// <summary>
@@ -71,8 +69,7 @@ namespace Selma.Core.Application
         /// </returns>
         public static IServiceCollection AddActor<TActorImplementation>(this IServiceCollection serviceCollection, Func<IServiceProvider, TActorImplementation> implementationFactory)
             where TActorImplementation
-            : class
-            , IActor
+            : Actor
             => serviceCollection.AddScoped(implementationFactory);
 
         /// <summary>
@@ -98,8 +95,7 @@ namespace Selma.Core.Application
             : class
             , TActorService
             where TActorService
-            : class
-            , IActor
+            : Actor
             => serviceCollection.AddScoped<TActorService, TActorImplementation>(implementationFactory);
     }
 }

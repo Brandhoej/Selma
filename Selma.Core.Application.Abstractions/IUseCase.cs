@@ -1,4 +1,6 @@
-﻿namespace Selma.Core.Application.Abstractions
+﻿using System;
+
+namespace Selma.Core.Application.Abstractions
 {
     /// <summary>
     ///     Represents a use case in a domain.
@@ -16,6 +18,7 @@
     ///     to return after the execution of the task.
     /// </typeparam>
     public interface IUseCase<TRequest, TResponse>
+        : IEquatable<IUseCase<TRequest, TResponse>>
         where TResponse
         : class
         where TRequest

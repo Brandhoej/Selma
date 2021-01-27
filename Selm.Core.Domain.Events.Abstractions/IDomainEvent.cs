@@ -4,7 +4,7 @@ using Selma.Core.MessageQueue.Abstractions;
 namespace Selma.Core.Domain.Events.Abstractions
 {
     /// <summary>
-    ///     Repåresents a domain which are mediated in a specific domain or single system
+    ///     Represents a domain which are mediated in a specific domain or single system
     /// </summary>
     public interface IDomainEvent
         : IDomainObject

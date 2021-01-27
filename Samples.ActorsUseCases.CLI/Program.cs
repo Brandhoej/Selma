@@ -9,7 +9,6 @@ using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
 using Microsoft.Extensions.DependencyInjection;
-using MediatR;
 
 namespace Samples.ActorsUseCases.CLI
 {
@@ -22,21 +21,20 @@ namespace Samples.ActorsUseCases.CLI
 
             ICollection<Profile> profiles = new List<Profile>();
 
-            ServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped(provider => profiles);
             serviceCollection.AddActor<User>();
 
             if (deferredEventDispatcher)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddDeferredDomainEventDispatcher();
+                serviceCollection.AddDeferredDomainEventMessageQueue(AppDomain.CurrentDomain.GetAssemblies());
 #pragma warning restore CS0162 // Unreachable code detected
             }
             else
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddImmediateDomainEventDispatcher();
+                serviceCollection.AddImmediateDomainEventMessageQueue();
 #pragma warning restore CS0162 // Unreachable code detected
             }
 
@@ -63,7 +61,7 @@ namespace Samples.ActorsUseCases.CLI
 
             ActivateProfileUseCaseRequest activateProfileUseCaseRequest = new ActivateProfileUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             await user.Do(activateProfileUseCaseRequest);
-
+            
             GetProfileInformationUseCaseRequest getProfileInformationUseCaseRequest = new GetProfileInformationUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             GetProfileInformationUseCaseResponse getProfileInformationUseCaseResponse = await user.Do(getProfileInformationUseCaseRequest);
 

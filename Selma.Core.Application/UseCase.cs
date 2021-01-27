@@ -39,6 +39,18 @@ namespace Selma.Core.Application
         , IUseCaseRequest<TResponse>
         , IRequest<TResponse>
     {
+        public override bool Equals(object obj)
+            => new UseCaseEqualityComparer<TRequest, TResponse>().Equals(this, obj);
+
+        public bool Equals(IUseCase<TRequest, TResponse> other)
+            => new UseCaseEqualityComparer<TRequest, TResponse>().Equals(this, other);
+
+        public override int GetHashCode()
+            => new UseCaseEqualityComparer<TRequest, TResponse>().GetHashCode(this);
+
+        public override string ToString()
+            => base.ToString();
+
         /// <summary>
         ///     Handles the <see cref="UseCase{TRequest, TResponse}"/> with a 
         ///     <typeparamref name="TRequest"/> and returns a <typeparamref name="TResponse"/>.
@@ -53,5 +65,28 @@ namespace Selma.Core.Application
         ///     An object with the result of the <typeparamref name="TRequest"/>.
         /// </returns>
         public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
+
+        public static bool operator !=(UseCase<TRequest, TResponse> left, UseCase<TRequest, TResponse> right)
+            => !(left == right);
+
+        public static bool operator ==(UseCase<TRequest, TResponse> left, UseCase<TRequest, TResponse> right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if (left is null)
+            {
+                return false;
+            }
+
+            if (left is null)
+            {
+                return false;
+            }
+
+            return left.Equals(right);
+        }
     }
 }

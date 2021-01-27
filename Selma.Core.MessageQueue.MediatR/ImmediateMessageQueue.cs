@@ -5,14 +5,11 @@ namespace Selma.Core.MessageQueue.MediatR
 {
     public class ImmediateMessageQueue<TMessage>
         : MessageQueue.ImmediateMessageQueue<TMessage>
+        , IImediateMessageQueue<TMessage>
         where TMessage
         : class
         , IMessage
     {
-        public ImmediateMessageQueue(IPublisher publisher)
-            : this(new Dispatcher<TMessage>(publisher))
-        { }
-
         public ImmediateMessageQueue(IDispatcher<TMessage> dispatcher)
             : base(dispatcher)
         { }

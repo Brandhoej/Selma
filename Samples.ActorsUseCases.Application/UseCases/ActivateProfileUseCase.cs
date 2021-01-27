@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Samples.ActorsUseCases.Application.UseCases
 {
-    public class ActivateProfileUseCaseRequest : UseCaseRequest<ActivateProfileUseCaseResponse>
+    public class ActivateProfileUseCaseRequest 
+        : UseCaseRequest<ActivateProfileUseCaseResponse>
     {
         public ActivateProfileUseCaseRequest(Guid profileId)
         {
@@ -24,7 +25,8 @@ namespace Samples.ActorsUseCases.Application.UseCases
     public class ActivateProfileUseCaseResponse
     { }
 
-    public class ActivateProfileUseCase : UseCase<ActivateProfileUseCaseRequest, ActivateProfileUseCaseResponse>
+    public class ActivateProfileUseCase 
+        : UseCase<ActivateProfileUseCaseRequest, ActivateProfileUseCaseResponse>
     {
         private readonly ICollection<Profile> m_profiles;
 

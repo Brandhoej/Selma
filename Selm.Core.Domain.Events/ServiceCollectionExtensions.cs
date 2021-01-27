@@ -1,39 +1,28 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Selma.Core.Domain.Events.Abstractions;
-using Selma.Core.MessageQueue.Abstractions;
 using Selma.Core.MessageQueue.MediatR;
+using System;
+using System.Reflection;
 
 namespace Selma.Core.Domain.Events
 {
-    /// <summary>
-    ///     Represents different extension methods for <see cref="IServiceCollection"/>.
-    /// </summary>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddDeferredDomainEventDispatcher(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddDeferredDomainEventMessageQueue<TMessage>(this IServiceCollection serviceCollection)
+            => serviceCollection.AddDeferredDomainEventMessageQueue(AppDomain.CurrentDomain.GetAssemblies());
+
+        public static IServiceCollection AddDeferredDomainEventMessageQueue(this IServiceCollection serviceCollection, params Assembly[] assemblies)
         {
-            serviceCollection.AddScoped<IDispatcher<IDomainEvent>, Dispatcher<IDomainEvent>>(
-                provider => new Dispatcher<IDomainEvent>(provider.GetService<IMediator>()));
-            serviceCollection.AddScoped<IDeferredMessageQueue<IDomainEvent>, DeferredMessageQueue<IDomainEvent>>(
-                provider => new DeferredMessageQueue<IDomainEvent>(provider.GetService<IDispatcher<IDomainEvent>>()));
-            serviceCollection.AddScoped<IMessageQueue<IDomainEvent>>(
-                provider => provider.GetService<IDeferredMessageQueue<IDomainEvent>>());
-            serviceCollection.AddScoped<IMessageQueueProducer<IDomainEvent>>(
-                provider => provider.GetService<IDeferredMessageQueue<IDomainEvent>>());
+            serviceCollection.AddDeferredMessageQueue<IDomainEvent>(assemblies);
             return serviceCollection;
         }
 
-        public static IServiceCollection AddImmediateDomainEventDispatcher(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddImmediateDomainEventMessageQueue(this IServiceCollection serviceCollection)
+            => serviceCollection.AddImmediateDomainEventMessageQueue(AppDomain.CurrentDomain.GetAssemblies());
+
+        public static IServiceCollection AddImmediateDomainEventMessageQueue(this IServiceCollection serviceCollection, params Assembly[] assemblies)
         {
-            serviceCollection.AddScoped<IDispatcher<IDomainEvent>, Dispatcher<IDomainEvent>>(
-                provider => new Dispatcher<IDomainEvent>(provider.GetService<IMediator>()));
-            serviceCollection.AddScoped<IImediateMessageQueue<IDomainEvent>, ImmediateMessageQueue<IDomainEvent>>(
-                provider => new ImmediateMessageQueue<IDomainEvent>(provider.GetService<IDispatcher<IDomainEvent>>()));
-            serviceCollection.AddScoped<IMessageQueue<IDomainEvent>>(
-                provider => provider.GetService<IImediateMessageQueue<IDomainEvent>>());
-            serviceCollection.AddScoped<IMessageQueueProducer<IDomainEvent>>(
-                provider => provider.GetService<IImediateMessageQueue<IDomainEvent>>());
+            serviceCollection.AddImmediateMessageQueue<IDomainEvent>(assemblies);
             return serviceCollection;
         }
     }

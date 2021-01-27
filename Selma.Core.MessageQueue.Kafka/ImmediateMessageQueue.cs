@@ -10,7 +10,6 @@ namespace Selma.Core.MessageQueue.Kafka
     {
         protected ImmediateMessageQueue(IDispatcher<TMessage> dispatcher)
             : base(dispatcher)
-        {
-        }
+        { }
     }
 }

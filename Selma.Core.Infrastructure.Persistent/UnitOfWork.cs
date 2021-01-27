@@ -21,19 +21,23 @@ namespace Selma.Core.Infrastructure.Persistent
         private IAbstractRepositoryFactory<TContext> AbstractRepositoryFactory { get; }
 
         public IRepository<TEntity, Guid> Repository<TEntity>()
-            where TEntity : class, IEntityRoot<Guid>
+            where TEntity 
+            : class
+            , IEntityRoot<Guid>
             => Repository<TEntity, Guid>();
 
         public IRepository<TEntity, TId> Repository<TEntity, TId>()
-            where TEntity : class, IEntityRoot<TId>
-        {
-            return AbstractRepositoryFactory.Repository<TEntity, TId>(Context);
-        }
+            where TEntity 
+            : class
+            , IEntityRoot<TId>
+            => AbstractRepositoryFactory.Repository<TEntity, TId>(Context);
 
         public int SaveChanges()
             => Context.SaveChanges();
+
         public ValueTask<int> SaveChangesAsync()
             => Context.SaveChangesAsync();
+
         public ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken)
             => Context.SaveChangesAsync(cancellationToken);
     }
