@@ -19,21 +19,10 @@ namespace Selma.Core.MessageQueue.MediatR
             : class
             , IMessage
         {
-            serviceCollection.AddMediatR(assemblies);
-            serviceCollection.AddScoped<ISender>(
-                provider => provider.GetService<IMediator>());
-            serviceCollection.AddScoped<IPublisher>(
-                provider => provider.GetService<IMediator>());
-
-            serviceCollection.AddScoped<IDispatcher<TMessage>, Dispatcher<TMessage>>();
-
-            serviceCollection.AddScoped<IDeferredMessageQueue<TMessage>, DeferredMessageQueue<TMessage>>();
-            serviceCollection.AddScoped<IMessageQueue<TMessage>>(
-                provider => provider.GetService<IDeferredMessageQueue<TMessage>>());
-            serviceCollection.AddScoped<IMessageQueueProducer<TMessage>>(
-                provider => provider.GetService<IDeferredMessageQueue<TMessage>>());
-
-            return serviceCollection;
+            return serviceCollection.AddMediatR<TMessage>(assemblies)
+                .AddScoped<IDeferredMessageQueue<TMessage>, DeferredMessageQueue<TMessage>>()
+                .AddScoped<IMessageQueue<TMessage>>(provider => provider.GetService<IDeferredMessageQueue<TMessage>>())
+                .AddScoped<IMessageQueueProducer<TMessage>>(provider => provider.GetService<IDeferredMessageQueue<TMessage>>());
         }
 
         public static IServiceCollection AddImmediateMessageQueue<TMessage>(this IServiceCollection serviceCollection)
@@ -47,20 +36,21 @@ namespace Selma.Core.MessageQueue.MediatR
             : class
             , IMessage
         {
-            serviceCollection.AddMediatR(assemblies);
-            serviceCollection.AddScoped<ISender>(
-                provider => provider.GetService<IMediator>());
-            serviceCollection.AddScoped<IPublisher>(
-                provider => provider.GetService<IMediator>());
+            return serviceCollection.AddMediatR<TMessage>(assemblies)
+                .AddScoped<IImediateMessageQueue<TMessage>, ImmediateMessageQueue<TMessage>>()
+                .AddScoped<IMessageQueue<TMessage>>(provider => provider.GetService<IImediateMessageQueue<TMessage>>())
+                .AddScoped<IMessageQueueProducer<TMessage>>(provider => provider.GetService<IImediateMessageQueue<TMessage>>());
+        }
 
-            serviceCollection.AddScoped<IDispatcher<TMessage>, Dispatcher<TMessage>>();
-
-            serviceCollection.AddScoped<IImediateMessageQueue<TMessage>, ImmediateMessageQueue<TMessage>>();
-            serviceCollection.AddScoped<IMessageQueue<TMessage>>(
-                provider => provider.GetService<IImediateMessageQueue<TMessage>>());
-            serviceCollection.AddScoped<IMessageQueueProducer<TMessage>>(
-                provider => provider.GetService<IImediateMessageQueue<TMessage>>());
-
+        private static IServiceCollection AddMediatR<TMessage>(this IServiceCollection serviceCollection, params Assembly[] assemblies)
+            where TMessage
+            : class
+            , IMessage
+        {
+            serviceCollection.AddMediatR(assemblies)
+                .AddScoped<ISender>(provider => provider.GetService<IMediator>())
+                .AddScoped<IPublisher>(provider => provider.GetService<IMediator>())
+                .AddScoped<IDispatcher<TMessage>, Dispatcher<TMessage>>();
             return serviceCollection;
         }
     }

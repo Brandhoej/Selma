@@ -2,7 +2,7 @@
 
 namespace Selma.Core.MessageQueue.Kafka
 {
-    public class ImmediateMessageQueue<TMessage>
+    public sealed class ImmediateMessageQueue<TMessage>
         : MessageQueue.ImmediateMessageQueue<TMessage>
         where TMessage
         : class

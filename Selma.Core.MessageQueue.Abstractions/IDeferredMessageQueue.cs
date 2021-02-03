@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Selma.Core.MessageQueue.Abstractions
         , IEnumerable
         , IReadOnlyCollection<TMessage>
         , ICollection
+        , IEquatable<IDeferredMessageQueue<TMessage>>
         where TMessage
         : class
         , IMessage

@@ -28,7 +28,7 @@ namespace Samples.ActorsUseCases.CLI
             if (deferredEventDispatcher)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddDeferredDomainEventMessageQueue(AppDomain.CurrentDomain.GetAssemblies());
+                serviceCollection.AddDeferredDomainEventMessageQueue();
 #pragma warning restore CS0162 // Unreachable code detected
             }
             else

@@ -15,5 +15,25 @@ namespace Selma.Core.MessageQueue
 
         public void Enqueue(TMessage element)
             => Dispatcher.Dispatch(element);
+
+        public bool Equals(IImediateMessageQueue<TMessage> other)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
     }
 }

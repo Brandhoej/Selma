@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Selma.Core.MessageQueue
@@ -35,8 +34,28 @@ namespace Selma.Core.MessageQueue
         public void Enqueue(TMessage element)
             => Queue.Enqueue(element);
 
+        public bool Equals(IDeferredMessageQueue<TMessage> other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
         public IEnumerator<TMessage> GetEnumerator()
             => Queue.GetEnumerator();
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();

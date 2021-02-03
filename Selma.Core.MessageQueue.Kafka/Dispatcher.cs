@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Selma.Core.MessageQueue.Kafka
 {
-    public class Dispatcher<TMessage>
+    public sealed class Dispatcher<TMessage>
         : IDispatcher<TMessage>
         where TMessage
         : IMessage

@@ -2,7 +2,7 @@
 
 namespace Selma.Core.MessageQueue.Kafka
 {
-    public class DeferredMessageQueue<TMessage>
+    public sealed class DeferredMessageQueue<TMessage>
         : MessageQueue.DeferredMessageQueue<TMessage>
         where TMessage
         : class
