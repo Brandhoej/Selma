@@ -48,7 +48,8 @@ namespace Selma.Core.Application
             : class
             , TActorService
             where TActorService
-            : Actor
+            : class
+            , IActor
             => serviceCollection.AddScoped<TActorService, TActorImplementation>();
 
         /// <summary>

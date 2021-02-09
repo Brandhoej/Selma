@@ -11,7 +11,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 {
     public class Repository<TEntity> 
         : Repository<TEntity, Guid>
-        , IRepository<TEntity, Guid>
+        , IRepository<TEntity>
         where TEntity 
         : class
         , IEntityRoot<Guid>
@@ -52,7 +52,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         }
 
         public void CreateRange(IEnumerable<TEntity> entities)
-            => CreateRange(entities);
+            => RootEntities.AddRange(entities);
 
         public void CreateRange(params TEntity[] entities)
             => RootEntities.AddRangeAsync(entities);
@@ -83,6 +83,9 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         public ValueTask<TEntity> ReadAsync(TId key)
             => ReadAsync(key, default);
+
+        public IEnumerable<TEntity> ReadAll()
+            => RootEntities;
 
         public ValueTask<TEntity> ReadAsync(TId key, CancellationToken cancellationToken)
         {
@@ -123,5 +126,10 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         public void DeleteRange(params TEntity[] entities)
             => RootEntities.RemoveRange(entities);
+
+        public bool Equals(IRepository<TEntity, TId> other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

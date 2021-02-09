@@ -13,11 +13,12 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         , IContext
         , IDisposable
     {
-        public Context()
-            : this(default)
+        public Context(DbContextOptions dbContextOptions)
+            : this(default, dbContextOptions)
         { }
 
-        public Context(IDeferredMessageQueue<IIntegrationEvent> deferredMessageQueue)
+        public Context(IDeferredMessageQueue<IIntegrationEvent> deferredMessageQueue, DbContextOptions dbContextOptions)
+            : base(dbContextOptions)
             => DeferredMessageQueue = deferredMessageQueue;
 
         protected IDeferredMessageQueue<IIntegrationEvent> DeferredMessageQueue { get; }

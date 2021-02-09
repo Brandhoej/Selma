@@ -14,9 +14,9 @@ namespace Selma.Core.Domain.Events
             => serviceCollection.AddDeferredMessageQueue<IDomainEvent>(assemblies);
 
         public static IServiceCollection AddImmediateDomainEventMessageQueue(this IServiceCollection serviceCollection)
-            => serviceCollection.AddImmediateDomainEventMessageQueue();
+            => serviceCollection.AddImmediateMessageQueue<IDomainEvent>();
 
         public static IServiceCollection AddImmediateDomainEventMessageQueue(this IServiceCollection serviceCollection, params Assembly[] assemblies)
-            => serviceCollection.AddImmediateDomainEventMessageQueue(assemblies);
+            => serviceCollection.AddImmediateMessageQueue<IDomainEvent>(assemblies);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Selma.Core.Application;
 using Selma.Core.Domain.Events;
@@ -9,6 +8,7 @@ using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
 using Microsoft.Extensions.DependencyInjection;
+using Samples.ActorsUseCases.Domain;
 
 namespace Samples.ActorsUseCases.CLI
 {
@@ -17,12 +17,10 @@ namespace Samples.ActorsUseCases.CLI
         static void Main(string[] args)
         {
             // If false then immediate dispatcher is used
-            const bool deferredEventDispatcher = true;
-
-            ICollection<Profile> profiles = new List<Profile>();
+            const bool deferredEventDispatcher = false;
 
             IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddScoped(provider => profiles);
+            serviceCollection.AddUnitOfWork();
             serviceCollection.AddActor<User>();
 
             if (deferredEventDispatcher)
@@ -41,7 +39,8 @@ namespace Samples.ActorsUseCases.CLI
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
             DomainEvent.Producer = serviceProvider.GetService<IMessageQueueProducer<IDomainEvent>>();
 
-            UserActorSample(serviceProvider.GetService<User>()).Wait();
+            User user = serviceProvider.GetService<User>();
+            UserActorSample(user).Wait();
 
             if (deferredEventDispatcher)
             {
@@ -51,13 +50,14 @@ namespace Samples.ActorsUseCases.CLI
 #pragma warning restore CS0162 // Unreachable code detected
             }
 
-            Console.WriteLine($"There is {serviceProvider.GetService<ICollection<Profile>>().Count} profile(s)");
+            Console.WriteLine($"There is {serviceProvider.GetService<IProfileRepository>().Count} profile(s)");
             Console.Read();
         }
 
         public static async Task UserActorSample(User user)
         {
-            RegisterProfileUseCaseRequest registerProfileUseCaseRequest = new RegisterProfileUseCaseRequest("Andreas K. Brandhøj", "andreasbrandhoej@hotmail.com");
+            Address addressOfUser = new Address("Langagervej", 4);
+            RegisterProfileUseCaseRequest registerProfileUseCaseRequest = new RegisterProfileUseCaseRequest("Andreas K. Brandhøj", "andreasbrandhoej@hotmail.com", addressOfUser);
             RegisterProfileUseCaseResponse registerProfileUseCaseResponse = await user.Do(registerProfileUseCaseRequest);
 
             Console.WriteLine($"{nameof(registerProfileUseCaseResponse.ProfileId)} = {registerProfileUseCaseResponse.ProfileId}");
@@ -70,6 +70,7 @@ namespace Samples.ActorsUseCases.CLI
 
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Name)} = {getProfileInformationUseCaseResponse.Name}");
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Email)} = {getProfileInformationUseCaseResponse.Email}");
+            Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Address)} = {getProfileInformationUseCaseResponse.Address}");
             Console.WriteLine($"{nameof(getProfileInformationUseCaseResponse.Activated)} = {getProfileInformationUseCaseResponse.Activated}");
         }
     }

@@ -5,7 +5,7 @@ using Selma.Core.Infrastructure.Persistent.Abstractions;
 namespace Selma.Core.Infrastructure.Persistent
 {
     internal class UnitOfWorkEqualityComparer<TContext>
-        : IEqualityComparer<IUnitOfWork<TContext>>
+        : IEqualityComparer<IUnitOfWork>
         , IEqualityComparer
         where TContext
         : class
@@ -23,10 +23,10 @@ namespace Selma.Core.Infrastructure.Persistent
                 return false;
             }
 
-            return Equals(x as IUnitOfWork<TContext>, y as IUnitOfWork<TContext>);
+            return Equals(x as IUnitOfWork, y as IUnitOfWork);
         }
 
-        public bool Equals(IUnitOfWork<TContext> x, IUnitOfWork<TContext> y)
+        public bool Equals(IUnitOfWork x, IUnitOfWork y)
         {
             if (x == null || y == null)
             {
@@ -47,9 +47,9 @@ namespace Selma.Core.Infrastructure.Persistent
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IUnitOfWork<TContext>);
+            => GetHashCode(obj as IUnitOfWork);
 
-        public int GetHashCode(IUnitOfWork<TContext> obj)
+        public int GetHashCode(IUnitOfWork obj)
             => obj.GetHashCode();
     }
 }

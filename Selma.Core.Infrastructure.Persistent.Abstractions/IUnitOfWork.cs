@@ -5,15 +5,13 @@ using Selma.Core.Domain.Abstractions;
 
 namespace Selma.Core.Infrastructure.Persistent.Abstractions
 {
-    public interface IUnitOfWork<TContext>
-        : IEquatable<IUnitOfWork<TContext>>
-        where TContext 
-        : IContext
+    public interface IUnitOfWork
+        : IEquatable<IUnitOfWork>
     {
-        IRepository<TEntity, Guid> Repository<TEntity>()
+        IRepository<TEntity> Repository<TEntity>()
             where TEntity 
             : class
-            , IEntityRoot<Guid>;
+            , IEntityRoot;
 
         IRepository<TEntity, TId> Repository<TEntity, TId>()
             where TEntity 

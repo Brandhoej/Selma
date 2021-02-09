@@ -1,7 +1,6 @@
 ﻿using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Selma.Core.Application;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,17 +9,19 @@ namespace Samples.ActorsUseCases.Application.UseCases
 {
     public class RegisterProfileUseCaseRequest : UseCaseRequest<RegisterProfileUseCaseResponse>
     {
-        public RegisterProfileUseCaseRequest(string name, string email)
+        public RegisterProfileUseCaseRequest(string name, string email, Address address)
         {
             Name = name;
             Email = email;
+            Address = address;
         }
 
         private RegisterProfileUseCaseRequest()
         { }
 
-        public string Name { get; private set; }
-        public string Email { get; private set; }
+        public string Name { get; }
+        public string Email { get;  }
+        public Address Address { get; }
     }
 
     public class RegisterProfileUseCaseResponse
@@ -33,22 +34,24 @@ namespace Samples.ActorsUseCases.Application.UseCases
         private RegisterProfileUseCaseResponse()
         { }
 
-        public Guid ProfileId { get; private set; }
+        public Guid ProfileId { get; }
     }
 
     public class RegisterProfileUseCase : UseCase<RegisterProfileUseCaseRequest, RegisterProfileUseCaseResponse>
     {
-        private readonly ICollection<Profile> m_profiles;
+        private readonly IProfileRepository m_profileRepository;
+        private readonly IProfileFactory m_profileFactory;
 
-        public RegisterProfileUseCase(ICollection<Profile> profiles)
+        public RegisterProfileUseCase(IProfileRepository profileRepository, IProfileFactory profileFactory)
         {
-            m_profiles = profiles;
+            m_profileRepository = profileRepository;
+            m_profileFactory = profileFactory;
         }
 
         public override Task<RegisterProfileUseCaseResponse> Handle(RegisterProfileUseCaseRequest request, CancellationToken cancellationToken = default)
         {
-            Profile profile = new Profile(request.Name, request.Email);
-            m_profiles.Add(profile);
+            IProfile profile = m_profileFactory.CreateProfile(request.Name, request.Email, request.Address);
+            m_profileRepository.Add(profile);
             return Task.FromResult(new RegisterProfileUseCaseResponse(profile.Id));
         }
     }

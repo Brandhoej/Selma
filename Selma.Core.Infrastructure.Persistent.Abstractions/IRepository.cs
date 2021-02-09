@@ -19,7 +19,7 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
         : class
         , IEntityRoot<TId>
     {
-       TEntity Create(TEntity entity);
+        TEntity Create(TEntity entity);
         ValueTask<TEntity> CreateAsync(TEntity entity);
         ValueTask<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken);
         void CreateRange(IEnumerable<TEntity> entities);
@@ -29,11 +29,13 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
         Task CreateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken);
         Task CreateRangeAsync(TEntity[] entities, CancellationToken cancellationToken);
 
-       TEntity Read(TId key);
+        TEntity Read(TId key);
         ValueTask<TEntity> ReadAsync(TId key);
         ValueTask<TEntity> ReadAsync(TId key, CancellationToken cancellationToken);
-        
-       TEntity Update(TEntity entity);
+
+        IEnumerable<TEntity> ReadAll();
+
+        TEntity Update(TEntity entity);
         void UpdateRange(params TEntity[] entities);
         void UpdateRange(IEnumerable<TEntity> entities);
 

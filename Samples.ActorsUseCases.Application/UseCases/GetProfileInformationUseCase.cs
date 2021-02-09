@@ -18,39 +18,41 @@ namespace Samples.ActorsUseCases.Application.UseCases
         private GetProfileInformationUseCaseRequest()
         { }
 
-        public Guid ProfileId { get; set; }
+        public Guid ProfileId { get; }
     }
 
     public class GetProfileInformationUseCaseResponse
     {
-        public GetProfileInformationUseCaseResponse(string name, string email, bool activated)
+        public GetProfileInformationUseCaseResponse(IProfile profile)
         {
-            Name = name;
-            Email = email;
-            Activated = activated;
+            Name = profile.Name;
+            Email = profile.Email;
+            Activated = profile.Activated;
+            Address = profile.Address;
         }
 
         private GetProfileInformationUseCaseResponse()
         { }
 
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public bool Activated { get; set; }
+        public string Name { get; }
+        public string Email { get; }
+        public bool Activated { get; }
+        public Address Address { get; }
     }
 
     public class GetProfileInformationUseCase : UseCase<GetProfileInformationUseCaseRequest, GetProfileInformationUseCaseResponse>
     {
-        private readonly ICollection<Profile> m_profiles;
+        private readonly IProfileRepository m_profileRepository;
 
-        public GetProfileInformationUseCase(ICollection<Profile> profiles)
+        public GetProfileInformationUseCase(IProfileRepository profileRepository)
         {
-            m_profiles = profiles;
+            m_profileRepository = profileRepository;
         }
 
         public override Task<GetProfileInformationUseCaseResponse> Handle(GetProfileInformationUseCaseRequest request, CancellationToken cancellationToken = default)
         {
-            Profile profile = m_profiles.First(curr => curr.Id == request.ProfileId);
-            return Task.FromResult(new GetProfileInformationUseCaseResponse(profile.Name, profile.Email, profile.Activated));
+            IProfile profile = m_profileRepository.ReadProfileById(request.ProfileId);
+            return Task.FromResult(new GetProfileInformationUseCaseResponse(profile));
         }
     }
 }

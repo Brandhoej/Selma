@@ -9,12 +9,12 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
         : class
         , IContext
     {
-        IRepository<TEntity> Repository<TEntity>(TContext context)
+        IRepository<TEntity> Repository<TEntity>()
             where TEntity 
             : class
-            , IEntityRoot<Guid>;
+            , IEntityRoot;
 
-        IRepository<TEntity, TId> Repository<TEntity, TId>(TContext context)
+        IRepository<TEntity, TId> Repository<TEntity, TId>()
             where TEntity 
             : class
             , IEntityRoot<TId>;

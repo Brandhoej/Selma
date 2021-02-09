@@ -10,13 +10,17 @@ namespace Selma.Core.Infrastructure.Persistent
         : class
         , IContext
     {
-        public IRepository<TEntity> Repository<TEntity>(TContext context)
+        public AbstractRepositoryFactory(TContext context)
+            => Context = context;
+
+        protected TContext Context { get; }
+
+        public abstract IRepository<TEntity> Repository<TEntity>()
             where TEntity
             : class
-            , IEntityRoot<Guid>
-            => (this as IAbstractRepositoryFactory<TContext>).Repository<TEntity, Guid>(context) as IRepository<TEntity>;
+            , IEntityRoot;
 
-        public abstract IRepository<TEntity, TId> Repository<TEntity, TId>(TContext context)
+        public abstract IRepository<TEntity, TId> Repository<TEntity, TId>()
             where TEntity 
             : class
             , IEntityRoot<TId>;

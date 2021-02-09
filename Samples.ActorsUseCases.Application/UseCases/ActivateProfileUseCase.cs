@@ -28,16 +28,16 @@ namespace Samples.ActorsUseCases.Application.UseCases
     public class ActivateProfileUseCase 
         : UseCase<ActivateProfileUseCaseRequest, ActivateProfileUseCaseResponse>
     {
-        private readonly ICollection<Profile> m_profiles;
+        private readonly IProfileRepository m_profileRepository;
 
-        public ActivateProfileUseCase(ICollection<Profile> profiles)
+        public ActivateProfileUseCase(IProfileRepository profileRepository)
         {
-            m_profiles = profiles;
+            m_profileRepository = profileRepository;
         }
 
         public override Task<ActivateProfileUseCaseResponse> Handle(ActivateProfileUseCaseRequest request, CancellationToken cancellationToken = default)
         {
-            Profile profile = m_profiles.First(curr => curr.Id == request.ProfileId);
+            IProfile profile = m_profileRepository.ReadProfileById(request.ProfileId);
             profile.Activate();
             return Task.FromResult(new ActivateProfileUseCaseResponse());
         }

@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Selma.Core.Domain.Abstractions;
 using Selma.Core.Infrastructure.Persistent.Abstractions;
 
 namespace Selma.Core.Infrastructure.Persistent
 {
     public sealed class UnitOfWork<TContext>
-        : IUnitOfWork<TContext>
+        : IUnitOfWork
         where TContext
         : class
         , IContext
@@ -21,18 +20,6 @@ namespace Selma.Core.Infrastructure.Persistent
         private TContext Context { get; }
         private IAbstractRepositoryFactory<TContext> AbstractRepositoryFactory { get; }
 
-        public IRepository<TEntity, Guid> Repository<TEntity>()
-            where TEntity 
-            : class
-            , IEntityRoot<Guid>
-            => Repository<TEntity, Guid>();
-
-        public IRepository<TEntity, TId> Repository<TEntity, TId>()
-            where TEntity 
-            : class
-            , IEntityRoot<TId>
-            => AbstractRepositoryFactory.Repository<TEntity, TId>(Context);
-
         public int SaveChanges()
             => Context.SaveChanges();
 
@@ -45,7 +32,7 @@ namespace Selma.Core.Infrastructure.Persistent
         public override bool Equals(object obj)
             => new UnitOfWorkEqualityComparer<TContext>().Equals(this, obj);
 
-        public bool Equals(IUnitOfWork<TContext> other)
+        public bool Equals(IUnitOfWork other)
             => new UnitOfWorkEqualityComparer<TContext>().Equals(this, other);
 
         public override int GetHashCode()
@@ -54,10 +41,16 @@ namespace Selma.Core.Infrastructure.Persistent
         public override string ToString()
             => base.ToString();
 
-        public static bool operator !=(UnitOfWork<TContext> left, IUnitOfWork<TContext> right)
+        IRepository<TEntity> IUnitOfWork.Repository<TEntity>()
+            => AbstractRepositoryFactory.Repository<TEntity>();
+
+        IRepository<TEntity, TId> IUnitOfWork.Repository<TEntity, TId>()
+            => AbstractRepositoryFactory.Repository<TEntity, TId>();
+
+        public static bool operator !=(UnitOfWork<TContext> left, IUnitOfWork right)
             => !(left == right);
 
-        public static bool operator ==(UnitOfWork<TContext> left, IUnitOfWork<TContext> right)
+        public static bool operator ==(UnitOfWork<TContext> left, IUnitOfWork right)
         {
             if (left is null && right is null)
             {
