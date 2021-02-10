@@ -9,15 +9,21 @@ using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Samples.ActorsUseCases.Domain;
+using Selma.Core.FSM;
+using System.Collections.Generic;
+using Selma.Core.FSM.Abstractions;
 
 namespace Samples.ActorsUseCases.CLI
 {
     class Program
     {
+        private enum State { S1, S2 };
+        private enum Alphabeth { A1, A2, A3 };
+
         static void Main(string[] args)
         {
             // If false then immediate dispatcher is used
-            const bool deferredEventDispatcher = false;
+            const bool deferredEventDispatcher = true;
 
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddUnitOfWork();
@@ -64,7 +70,7 @@ namespace Samples.ActorsUseCases.CLI
 
             ActivateProfileUseCaseRequest activateProfileUseCaseRequest = new ActivateProfileUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             await user.Do(activateProfileUseCaseRequest);
-            
+
             GetProfileInformationUseCaseRequest getProfileInformationUseCaseRequest = new GetProfileInformationUseCaseRequest(registerProfileUseCaseResponse.ProfileId);
             GetProfileInformationUseCaseResponse getProfileInformationUseCaseResponse = await user.Do(getProfileInformationUseCaseRequest);
 
