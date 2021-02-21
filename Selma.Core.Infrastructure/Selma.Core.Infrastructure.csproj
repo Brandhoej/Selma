@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent\Selma.Core.Infrastructure.Persistent.csproj" />
+  </ItemGroup>
+
 </Project>

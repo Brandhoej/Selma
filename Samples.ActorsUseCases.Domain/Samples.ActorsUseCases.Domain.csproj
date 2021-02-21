@@ -9,8 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Selma.Core.FSM.Abstractions\Selma.Core.FSM.Abstractions.csproj" />
-    <ProjectReference Include="..\..\Selma.Core.FSM\Selma.Core.FSM.csproj" />
     <ProjectReference Include="..\Selm.Core.Domain.Events\Selma.Core.Domain.Events.csproj" />
     <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
     <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj" />

@@ -10,7 +10,12 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
     {
         public new bool Equals(object x, object y)
         {
-            if (x == null || y == null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -26,7 +31,12 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 
         public bool Equals(IContext x, IContext y)
         {
-            if (x == null || y == null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -36,7 +46,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
                 return false;
             }
 
-            if (GetHashCode(x) == GetHashCode(y))
+            if (GetHashCode(x) != GetHashCode(y))
             {
                 return false;
             }

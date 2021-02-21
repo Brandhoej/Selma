@@ -12,12 +12,12 @@ namespace Selma.Core.Application
     {
         public new bool Equals(object x, object y)
         {
-            if (x == null)
+            if (x is null)
             {
                 return false;
             }
 
-            if (y == null)
+            if (y is null)
             {
                 return false;
             }
@@ -32,17 +32,22 @@ namespace Selma.Core.Application
 
         public bool Equals(IUseCaseRequest<TResponse> x, IUseCaseRequest<TResponse> y)
         {
-            if (y == null)
+            if (x is null)
             {
                 return false;
             }
 
-            if (y.GetHashCode() != GetHashCode())
+            if (y is null)
             {
                 return false;
             }
 
             if (!ReferenceEquals(this, y))
+            {
+                return false;
+            }
+
+            if (y.GetHashCode() != GetHashCode())
             {
                 return false;
             }

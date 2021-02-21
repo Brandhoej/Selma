@@ -18,7 +18,7 @@ namespace Selma.Core.Application
         IActor IEnumerator<IActor>.Current => CurrentChild;
 
         public bool MoveNext()
-            => (CurrentChild = Root?.Successor) != null;
+            => (CurrentChild = CurrentChild.Successor) != null;
 
         public void Reset()
             => CurrentChild = Root;

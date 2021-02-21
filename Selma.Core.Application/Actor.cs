@@ -71,11 +71,11 @@ namespace Selma.Core.Application
         /// </exception>
         public Actor(IActor successor, IMediator mediator)
         {
+            Mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
             Successor = successor;
-            Mediator = mediator;
 
             SupportedUseCaseCacheHits = new Dictionary<Type, bool>();
-            SupportedUseCases = new HashSet<Type>(GetAllUseCases() ?? throw new ArgumentNullException());
+            SupportedUseCases = new HashSet<Type>(GetAllUseCases());
         }
 
         /// <summary>
@@ -98,11 +98,11 @@ namespace Selma.Core.Application
         private ICollection<Type> SupportedUseCases { get; }
 
         /// <summary>
-        ///     Stores results from <see cref="SupportsUseCase{TResponse}"/>.
+        ///     Stores results from <see cref="SupportsUseCaseWithResponse{TResponse}"/>.
         /// </summary>
         private IDictionary<Type, bool> SupportedUseCaseCacheHits { get; }
 
-        public int Count => (this as IEnumerable<IActor>).Count();
+        public int Count => (this as IEnumerable<IActor>).Count() + 1;
 
         /// <summary>
         ///     Applies a use case to the <see cref="Actor"/> through a <see cref="IUseCaseRequest{TResponse}"/>.
@@ -130,17 +130,14 @@ namespace Selma.Core.Application
             where TResponse
             : class
         {
-            if (SupportsUseCase<TResponse>())
+            if (SupportsUseCaseWithResponse<TResponse>())
             {
                 return (TResponse)await Mediator.Send(request, cancellationToken);
             }
-            else
+            else if(Successor != null)
             {
                 /// Since the <see cref="IUseCase{IUseCaseRequest{TResponse}, TResponse}"/> was not supported the <see cref="Successor"/>
-                if (Successor != null)
-                {
-                    return await Successor.Do(request, cancellationToken);
-                }
+                return await Successor.Do(request, cancellationToken);
             }
 
             throw new InvalidOperationException($"{GetType().Name} does not support request {request.GetType().Name}");
@@ -155,7 +152,7 @@ namespace Selma.Core.Application
         /// <returns>
         ///     True if the <see cref="Actor"/> supports the <see cref="IUseCase{TRequest, TResponse}"/> with the return type <typeparamref name="TResponse"/>; otherwise, false.
         /// </returns>
-        public bool SupportsUseCase<TResponse>()
+        public bool SupportsUseCaseWithResponse<TResponse>()
             where TResponse
             : class
         {
@@ -280,11 +277,116 @@ namespace Selma.Core.Application
         /// </exception>
         private IEnumerable<Type> GetAllUseCases()
         {
-            ICollection<Exception> exceptions = new List<Exception>();
+            List<Exception> exceptions = new List<Exception>();
 
-            /// Get <see cref="IEnumerable{Type}"/> from the <see cref="IEnumerable{Assembly}"/>.
-            /// If none were found in the <see cref="Assembly"/> then we assume that the <see cref="Assembly"/> is incorrectly chosen.
-            IEnumerable<Type> supportedAssemblyTypes = GetSupportedAssemblies()
+            IEnumerable<Assembly> supportedAssemblies = GetSupportedAssemblies();
+            IEnumerable<Type> supportedUseCases = GetSupportedUseCases();
+
+            IEnumerable<Type> actualSupportedAssemblyUseCases = Enumerable.Empty<Type>();
+            IEnumerable<Type> actualSupportedUseCases = Enumerable.Empty<Type>();
+
+            if (supportedAssemblies != null)
+            {
+                try
+                {
+                    /// Get <see cref="IEnumerable{Type}"/> from the <see cref="IEnumerable{Assembly}"/>.
+                    /// If none were found in the <see cref="Assembly"/> then we assume that the <see cref="Assembly"/> is incorrectly chosen.
+                    actualSupportedAssemblyUseCases = GetUseCasesFromAssemblies(supportedAssemblies);
+                }
+                catch (AggregateException aggregateException)
+                {
+                    exceptions.AddRange(aggregateException.InnerExceptions);
+                }
+                catch (Exception exception)
+                {
+                    exceptions.Add(exception);
+                }
+            }
+
+            if (supportedUseCases != null)
+            {
+                try
+                {
+                    /// Validate <see cref="IEnumerable{Type}"/> defined to check if they implement <see cref="IUseCase{TRequest, TResponse}"/>.
+                    /// We assume that it is an error/exception if a <see cref="Type"/> does not implement <see cref="IUseCase{TRequest, TResponse}"/>.
+                    actualSupportedUseCases = GetUseCasesFromTypes(supportedUseCases);
+                }
+                catch (AggregateException aggregateException)
+                {
+                    exceptions.AddRange(aggregateException.InnerExceptions);
+                }
+                catch (Exception exception)
+                {
+                    exceptions.Add(exception);
+                }
+            }
+
+
+            /// We do not want to have duplicate <see cref="IUseCase{TRequest, TResponse}"/> therefore we expect it to 
+            /// be an error/exception if the same <see cref="IUseCase{TRequest, TResponse}"/> is defined multiple times.
+            IEnumerable<Type> allSupportedUseCases = actualSupportedAssemblyUseCases.Concat(actualSupportedUseCases);
+            IEnumerable<Type> distinctUseCases = allSupportedUseCases.Distinct();
+            if (distinctUseCases.Count() != allSupportedUseCases.Count())
+            {
+                IEnumerable<Type> duplicateUseCases = allSupportedUseCases
+                    .GroupBy(x => x)
+                    .Where(g => g.Count() > 1)
+                    .Select(y => y.Key);
+
+                foreach (Type duplicateUseCase in duplicateUseCases)
+                {
+                    exceptions.Add(new ArgumentException($"{duplicateUseCase.Name} was defined multiple times"));
+                }
+            }
+
+            /// Aggregate the <see cref="exceptions"/> in a <see cref="AggregateException"/> if there are more than one.
+            /// This ensures maximum information output in the case of possible errors.
+            if (exceptions.Count == 1)
+            {
+                throw exceptions.First();
+            }
+            else if (exceptions.Count > 1)
+            {
+                throw new AggregateException($"One or more exceptions were found when retrieving all supported use cases for the actor {GetType().Name}", exceptions);
+            }
+
+            return allSupportedUseCases ?? Enumerable.Empty<Type>();
+        }
+
+        private IEnumerable<Type> GetUseCasesFromTypes(IEnumerable<Type> types)
+        {
+            ICollection<Exception> exceptions = new List<Exception>();
+            IEnumerable<Type> result =  types
+                .Where(type =>
+                {
+                    if (type == null)
+                    {
+                        exceptions.Add(new NullReferenceException($"A use case type was a null reference"));
+                    }
+                    else
+                    {
+                        bool isUseCase = type.IsConcretionAssignableTo(typeof(IUseCase<,>));
+                        if (!isUseCase)
+                        {
+                            exceptions.Add(new InvalidOperationException($"{type.Name} does not implement {typeof(IUseCase<,>)}"));
+                        }
+                        return isUseCase;
+                    }
+                    return false;
+                });
+
+            if (exceptions.Count >= 1)
+            {
+                throw new AggregateException(exceptions);
+            }
+
+            return result;
+        }
+
+        private IEnumerable<Type> GetUseCasesFromAssemblies(IEnumerable<Assembly> assemblies)
+        {
+            ICollection<Exception> exceptions = new List<Exception>();
+            IEnumerable<Type> result = assemblies
                 .SelectMany(assembly =>
                 {
                     if (assembly == null)
@@ -310,58 +412,12 @@ namespace Selma.Core.Application
                     return Enumerable.Empty<Type>();
                 });
 
-            /// Validate <see cref="IEnumerable{Type}"/> defined to check if they implement <see cref="IUseCase{TRequest, TResponse}"/>.
-            /// We assume that it is an error/exception if a <see cref="Type"/> does not implement <see cref="IUseCase{TRequest, TResponse}"/>.
-            IEnumerable<Type> supportedUseCaseTypes = GetSupportedUseCases()
-                .Where(type =>
-                {
-                    if (type == null)
-                    {
-                        exceptions.Add(new NullReferenceException($"A use case type was a null reference"));
-                    }
-                    else
-                    {
-                        bool isUseCase = type.IsConcretionAssignableTo(typeof(IUseCase<,>));
-                        if (!isUseCase)
-                        {
-                            exceptions.Add(new InvalidOperationException($"{type.Name} does not implement {typeof(IUseCase<,>)}"));
-                        }
-                        return isUseCase;
-                    }
-
-                    /// False because the type was null
-                    return false;
-                });
-
-            /// We do not want to have duplicate <see cref="IUseCase{TRequest, TResponse}"/> therefore we expect it to 
-            /// be an error/exception if the same <see cref="IUseCase{TRequest, TResponse}"/> is defined multiple times.
-            IEnumerable<Type> supportedUseCases = supportedAssemblyTypes.Concat(supportedUseCaseTypes);
-            IEnumerable<Type> distinctUseCases = supportedUseCases.Distinct();
-            if (distinctUseCases.Count() != supportedUseCases.Count())
+            if (exceptions.Count >= 1)
             {
-                IEnumerable<Type> duplicateUseCases = supportedUseCases
-                    .GroupBy(x => x)
-                    .Where(g => g.Count() > 1)
-                    .Select(y => y.Key);
-
-                foreach (Type duplicateUseCase in duplicateUseCases)
-                {
-                    exceptions.Add(new ArgumentException($"{duplicateUseCase.Name} was defined multiple times"));
-                }
+                throw new AggregateException(exceptions);
             }
 
-            /// Aggregate the <see cref="exceptions"/> in a <see cref="AggregateException"/> if there are more than one.
-            /// This ensures maximum information output in the case of possible errors.
-            if (exceptions.Count == 1)
-            {
-                throw exceptions.First();
-            }
-            else if (exceptions.Count > 1)
-            {
-                throw new AggregateException($"One or more exceptions were found when retrieving all supported use cases for the actor {GetType().Name}", exceptions);
-            }
-
-            return supportedUseCases;
+            return result;
         }
 
         public static bool operator !=(Actor left, IActor right)

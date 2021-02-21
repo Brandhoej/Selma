@@ -11,7 +11,12 @@ namespace Selma.Core.Domain
     {
         public new bool Equals(object x, object y)
         {
-            if (x == null || y == null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -25,7 +30,29 @@ namespace Selma.Core.Domain
         }
 
         public bool Equals(IValueObject x, IValueObject y)
-            => x.Equals(y);
+        {
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
+            {
+                return false;
+            }
+
+            if (!ReferenceEquals(this, y))
+            {
+                return false;
+            }
+
+            if (y.GetHashCode() != GetHashCode())
+            {
+                return false;
+            }
+
+            return x.Equals(y);
+        }
 
 
         public int GetHashCode(object obj)

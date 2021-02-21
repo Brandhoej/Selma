@@ -60,7 +60,7 @@ namespace Selma.Core.Application.Abstractions
         ///     True if the <see cref="IActor"/> supports the <see cref="IUseCase{TRequest, TResponse}"/> 
         ///     with the return type <typeparamref name="TResponse"/>; otherwise, false.
         /// </returns>
-        bool SupportsUseCase<TResponse>()
+        bool SupportsUseCaseWithResponse<TResponse>()
             where TResponse
             : class;
 

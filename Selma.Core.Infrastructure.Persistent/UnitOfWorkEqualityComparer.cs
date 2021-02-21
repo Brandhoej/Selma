@@ -13,7 +13,12 @@ namespace Selma.Core.Infrastructure.Persistent
     {
         public new bool Equals(object x, object y)
         {
-            if (x == null || y == null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -28,7 +33,12 @@ namespace Selma.Core.Infrastructure.Persistent
 
         public bool Equals(IUnitOfWork x, IUnitOfWork y)
         {
-            if (x == null || y == null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -38,7 +48,7 @@ namespace Selma.Core.Infrastructure.Persistent
                 return false;
             }
 
-            if (GetHashCode(x) == GetHashCode(y))
+            if (GetHashCode(x) != GetHashCode(y))
             {
                 return false;
             }
