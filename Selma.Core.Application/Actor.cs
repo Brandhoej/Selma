@@ -189,9 +189,6 @@ namespace Selma.Core.Application
         public override int GetHashCode()
             => new ActorEqualityComparer().GetHashCode(this);
 
-        public override string ToString()
-            => base.ToString();
-
         /// <summary>
         ///     Enables other <see cref="Actor"/> specialization classes to define which <see cref="Enumerable.Empty{Assembly}"/> 
         ///     with <see cref="IUseCase{TRequest, TResponse}"/> the <see cref="Actor"/> supports.
@@ -425,11 +422,6 @@ namespace Selma.Core.Application
 
         public static bool operator ==(Actor left, IActor right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -28,3 +28,9 @@ Features
  - UseCaseRequest
  - ServiceCollectionExtensions
    - WIP: Allow MediatR instantiation where the assemblies of Actors are automatically supplied.
+
+TODO Unit testing:
+- (Y) Actor
+- UseCase
+- UseCaseRequest
+- ServiceCollectionExtensions

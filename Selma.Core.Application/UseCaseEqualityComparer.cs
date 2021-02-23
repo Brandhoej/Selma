@@ -2,6 +2,7 @@
 using Selma.Core.Application.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Application
 {
@@ -17,12 +18,7 @@ namespace Selma.Core.Application
     {
         public new bool Equals(object x, object y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -32,17 +28,12 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return Equals(x as IActor, y as IActor);
+            return Equals(x as IUseCase<TRequest, TResponse>, y as IUseCase<TRequest, TResponse>);
         }
 
         public bool Equals(IUseCase<TRequest, TResponse> x, IUseCase<TRequest, TResponse> y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -52,18 +43,18 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            if (GetHashCode(x) != GetHashCode(y))
+            if (x.GetHashCode() != y.GetHashCode())
             {
                 return false;
             }
 
-            return x.Equals(y);
+            return true;
         }
 
         public int GetHashCode(object obj)
             => obj.GetHashCode();
 
         public int GetHashCode(IUseCase<TRequest, TResponse> obj)
-            => obj.GetHashCode();
+            => RuntimeHelpers.GetHashCode(obj);
     }
 }

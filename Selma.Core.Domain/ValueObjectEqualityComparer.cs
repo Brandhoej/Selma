@@ -51,7 +51,7 @@ namespace Selma.Core.Domain
                 return false;
             }
 
-            return x.Equals(y);
+            return true;
         }
 
 

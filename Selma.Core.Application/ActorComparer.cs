@@ -14,7 +14,21 @@ namespace Selma.Core.Application
 
         public int Compare(IActor x, IActor y)
         {
+            if (x.Equals(y))
+            {
+                return 0;
+            }
+
             ICollection<IActor> common = new List<IActor>(x.Intersect(y));
+
+            if (x.Contains(y))
+            {
+                common.Add(y);
+            }
+            else if(y.Contains(x))
+            {
+                common.Add(x);
+            }
 
             /// If the <see cref="ICollection.Count"/> of <see cref="common"/> is 0, then they are disjoint.
             if (common.Count == 0)
@@ -24,7 +38,9 @@ namespace Selma.Core.Application
 
             /// If the first <see cref="common"/> is closest to <see cref="this"/> then 1; otherwise, -1.
             IActor closests = common.First();
-            return Distance(closests, x).CompareTo(Distance(closests, y));
+            int distX = Distance(closests, x);
+            int distY = Distance(closests, y);
+            return distX.CompareTo(distY);
         }
 
         private int Distance(IActor to, IActor from)

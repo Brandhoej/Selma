@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Application
 {
@@ -46,23 +47,31 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            if (GetHashCode(x) != GetHashCode(y))
+            if (x.GetHashCode() != y.GetHashCode())
             {
                 return false;
             }
 
-            return x.Successor == null && y.Successor == null ||
-                x.Successor.Equals(y.Successor);
+            return x.Successor is null && y.Successor is null ||
+                x is object && x.Successor.Equals(y.Successor);
         }
 
         public int GetHashCode(object obj)
-            => obj.GetHashCode();
+            => obj is null ? 0 : obj.GetHashCode();
 
         public int GetHashCode(IActor obj)
         {
+            if (obj is null)
+            {
+                return 0;
+            }
+
             HashCode hashCode = new HashCode();
-            hashCode.Add(this);
-            hashCode.Add(obj.Successor);
+            hashCode.Add(RuntimeHelpers.GetHashCode(obj));
+            if (obj.Successor is object)
+            {
+                hashCode.Add(obj.Successor);
+            }
             return hashCode.ToHashCode();
         }
     }

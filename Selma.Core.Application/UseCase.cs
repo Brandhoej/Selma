@@ -48,9 +48,6 @@ namespace Selma.Core.Application
         public override int GetHashCode()
             => new UseCaseEqualityComparer<TRequest, TResponse>().GetHashCode(this);
 
-        public override string ToString()
-            => base.ToString();
-
         /// <summary>
         ///     Handles the <see cref="UseCase{TRequest, TResponse}"/> with a 
         ///     <typeparamref name="TRequest"/> and returns a <typeparamref name="TResponse"/>.
@@ -71,11 +68,6 @@ namespace Selma.Core.Application
 
         public static bool operator ==(UseCase<TRequest, TResponse> left, IUseCase<TRequest, TResponse> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

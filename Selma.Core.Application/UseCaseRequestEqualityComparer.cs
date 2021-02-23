@@ -52,7 +52,7 @@ namespace Selma.Core.Application
                 return false;
             }
 
-            return x.Equals(y);
+            return true;
         }
 
         public int GetHashCode(object obj)

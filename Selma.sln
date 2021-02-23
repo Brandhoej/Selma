@@ -65,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.FSM", "Selma.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.FSM.Abstractions", "Selma.Core.FSM.Abstractions\Selma.Core.FSM.Abstractions.csproj", "{AA1A0BFE-897C-41F2-9979-0598F91DA8C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selma.Core.Application.Test.Unit", "Selma.Core.Application.Test.Unit\Selma.Core.Application.Test.Unit.csproj", "{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.Application.Test.Unit", "Selma.Core.Application.Test.Unit\Selma.Core.Application.Test.Unit.csproj", "{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selma.Core.Application.Test.Integration", "Selma.Core.Application.Test.Integration\Selma.Core.Application.Test.Integration.csproj", "{62DE513E-FC14-4877-A936-1CA9214013B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -185,6 +187,10 @@ Global
 		{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62DE513E-FC14-4877-A936-1CA9214013B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62DE513E-FC14-4877-A936-1CA9214013B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62DE513E-FC14-4877-A936-1CA9214013B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62DE513E-FC14-4877-A936-1CA9214013B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -220,6 +226,7 @@ Global
 		{BF13A798-7AD7-44EA-8817-4C768348F666} = {593589F6-85BF-49F3-926F-7717FD500B83}
 		{AA1A0BFE-897C-41F2-9979-0598F91DA8C3} = {593589F6-85BF-49F3-926F-7717FD500B83}
 		{D0811241-19BF-44CB-BFB2-06D3EAB2CD86} = {593589F6-85BF-49F3-926F-7717FD500B83}
+		{62DE513E-FC14-4877-A936-1CA9214013B6} = {593589F6-85BF-49F3-926F-7717FD500B83}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {21496711-F366-40ED-AB1F-CBD9C9EB18FD}
