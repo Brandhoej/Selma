@@ -10,7 +10,8 @@
       <IncludeAssets>all</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0">
-      <PrivateAssets>all</PrivateAssets>
+      <PrivateAssets></PrivateAssets>
+      <IncludeAssets>all</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 

@@ -28,9 +28,6 @@ namespace Selma.Core.Application
         public override int GetHashCode()
             => new UseCaseRequestEqualityComparer<TResponse>().GetHashCode(this);
 
-        public override string ToString()
-            => base.ToString();
-
         public static bool operator !=(UseCaseRequest<TResponse> left, IUseCaseRequest<TResponse> right)
             => !(left == right);
 

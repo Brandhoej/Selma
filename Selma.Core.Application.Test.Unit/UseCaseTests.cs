@@ -1,15 +1,8 @@
 ﻿using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Selma.Core.Application.Test.Unit
 {
-    /*
-     * int GetHashCode()
-     * operators: != ==
-     */
     public class UseCaseTests
     {
         public class Response { }

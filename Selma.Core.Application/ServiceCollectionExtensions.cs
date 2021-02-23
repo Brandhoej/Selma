@@ -71,7 +71,7 @@ namespace Selma.Core.Application
         public static IServiceCollection AddActor<TActorImplementation>(this IServiceCollection serviceCollection, Func<IServiceProvider, TActorImplementation> implementationFactory)
             where TActorImplementation
             : Actor
-            => serviceCollection.AddScoped(implementationFactory);
+            => serviceCollection.AddScoped(implementationFactory ?? throw new ArgumentNullException(nameof(implementationFactory)));
 
         /// <summary>
         ///     Adds a <see cref="ServiceDescriptor.Scoped{TService, TImplementation}"/> with
@@ -96,7 +96,8 @@ namespace Selma.Core.Application
             : class
             , TActorService
             where TActorService
-            : Actor
-            => serviceCollection.AddScoped<TActorService, TActorImplementation>(implementationFactory);
+            : class
+            , IActor
+            => serviceCollection.AddScoped<TActorService, TActorImplementation>(implementationFactory ?? throw new ArgumentNullException(nameof(implementationFactory)));
     }
 }

@@ -31,6 +31,6 @@ Features
 
 TODO Unit testing:
 - (Y) Actor
-- UseCase
-- UseCaseRequest
+- (Y) UseCase
+- (Y) UseCaseRequest
 - ServiceCollectionExtensions
