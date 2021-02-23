@@ -90,9 +90,7 @@ namespace Selma.Core.Application.Test.Unit
 
                 // Act
                 void Test()
-                {
-                    serviceCollection.AddActor(factory);
-                }
+                    => serviceCollection.AddActor(factory);
 
                 // Assert
                 Assert.Throws<ArgumentNullException>(Test);
@@ -126,9 +124,7 @@ namespace Selma.Core.Application.Test.Unit
 
                 // Act
                 void Test()
-                {
-                    serviceCollection.AddActor<IActorA, ActorA>(factory);
-                }
+                    => serviceCollection.AddActor<IActorA, ActorA>(factory);
 
                 // Assert
                 Assert.Throws<ArgumentNullException>(Test);
