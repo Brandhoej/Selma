@@ -1,10 +1,18 @@
 ﻿using MediatR;
 using NSubstitute;
 using Selma.Core.Application.Abstractions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
+
+/* virtual IEnumerable<Assembly> GetSupportedAssemblies()
+ * virtual IEnumerable<Type> GetSupportedUseCases()
+ */
 
 namespace Selma.Core.Application.Test.Unit
 {
@@ -81,6 +89,72 @@ namespace Selma.Core.Application.Test.Unit
 
         public class TheDoMethod
         {
+            public class TestUseCaseResponse
+            { }
+            public interface ITestUseCaseRequest
+                : IUseCaseRequest<TestUseCaseResponse>
+            { }
+            public interface ITestUseCase1
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+            public interface ITestUseCase2
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+
+            public class ActorWithUseCase1Supported
+                : Actor
+            {
+                public ActorWithUseCase1Supported(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Type> GetSupportedUseCases()
+                {
+                    yield return typeof(ITestUseCase1);
+                }
+            }
+
+            public class ActorWithNoUseCases
+                : Actor
+            {
+                public ActorWithNoUseCases(IMediator mediator)
+                    : base(mediator)
+                { }
+            }
+
+            [Fact]
+            public async void Do_InvokesTheSendForTheMEdiatorInTheActor_IfTheUseCaseIsSupported()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                ITestUseCaseRequest request = Substitute.For<ITestUseCaseRequest>();
+                ActorWithUseCase1Supported actor;
+
+                // Act
+                actor = new ActorWithUseCase1Supported(mediator);
+                await actor.Do(request);
+
+                // Assert
+                await mediator.Received().Send(Arg.Any<object>());
+            }
+
+            [Fact]
+            public async void Do_ThrowsInvalidOperationException_IfBothTheActorAndSuccessorDoesNotSupportTheUseCaseRequest()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                ITestUseCaseRequest request = Substitute.For<ITestUseCaseRequest>();
+                InvalidOperationException exception;
+                ActorWithNoUseCases actor;
+
+                // Act
+                actor = new ActorWithNoUseCases(mediator);
+                exception = await Assert.ThrowsAsync<InvalidOperationException>(() => actor.Do(request).AsTask());
+
+                // Assert
+                Assert.NotNull(exception);
+            }
+
             [Fact]
             public void SupportsUseCase_ReturnsFalse_IfNoSupportedUseCaseTypesAndAssembliesHasBeenDefined()
             {
@@ -468,6 +542,304 @@ namespace Selma.Core.Application.Test.Unit
 
                 // Assert
                 Assert.NotEqual(hashA, hashB);
+            }
+        }
+
+        public class TheGetSupportedAssembliesMethod
+        {
+            public class TestUseCaseResponse
+            { }
+            public interface ITestUseCaseRequest
+                : IUseCaseRequest<TestUseCaseResponse>
+            { }
+            public interface ITestUseCase1
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+            public interface ITestUseCase2
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+
+            public class AssemblyWithUseCase
+                : Assembly
+            {
+                public override Type[] GetTypes()
+                    => new Type[] { typeof(ITestUseCase1) };
+            }
+
+            public class AssemblyWithNoUseCase
+                : Assembly
+            {
+                public override Type[] GetTypes()
+                    => new Type[] { typeof(ActorTests) };
+            }
+
+            public class AssemblyWithDuplicateUseCase
+                : Assembly
+            {
+                public override Type[] GetTypes()
+                    => new Type[] { typeof(ITestUseCase1), typeof(ITestUseCase1) };
+            }
+
+            public class AssemblyWithMultipleDuplicateUseCase
+                : Assembly
+            {
+                public override Type[] GetTypes()
+                    => new Type[] { typeof(ITestUseCase1), typeof(ITestUseCase1), typeof(ITestUseCase2), typeof(ITestUseCase2) };
+            }
+
+            public class AssemblyWithDefaultType
+                : Assembly
+            {
+                public override Type[] GetTypes()
+                    => new Type[] { default };
+            }
+
+            /* Disallow default assemblies
+             * Disallow assemblies without UseCases
+             * Disallow assemblies without any types
+             * Allow empty IEnumerable of assemblies
+             * Allow an assembly with UseCase(s)
+             */
+
+            public class ActorWithUseCaseInAssembly
+                : Actor
+            {
+                public ActorWithUseCaseInAssembly(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                {
+                    yield return new AssemblyWithUseCase();
+                }
+            }
+
+            public class ActorWithDefaultAssembly
+                : Actor
+            {
+                public ActorWithDefaultAssembly(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                    => Enumerable.Empty<Assembly>();
+            }
+
+            public class ActorWithNoUseCaseInAssembly
+                : Actor
+            {
+                public ActorWithNoUseCaseInAssembly(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                {
+                    yield return new AssemblyWithNoUseCase();
+                }
+            }
+
+            public class ActorWithDuplicateSupportedUseCases
+                : Actor
+            {
+                public ActorWithDuplicateSupportedUseCases(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                {
+                    yield return new AssemblyWithDuplicateUseCase();
+                }
+            }
+
+            public class ActorWithDefaultTypeInASupportedAssembly
+                : Actor
+            {
+                public ActorWithDefaultTypeInASupportedAssembly(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                {
+                    yield return new AssemblyWithDefaultType();
+                }
+            }
+
+            public class ActorWithMultipleDuplicateAssemblyUseCases
+                : Actor
+            {
+                public ActorWithMultipleDuplicateAssemblyUseCases(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Assembly> GetSupportedAssemblies()
+                {
+                    yield return new AssemblyWithMultipleDuplicateUseCase();
+                }
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_DoesNotThrowAnException_IfTheActorHasdefinedAnAssemblyWithAUseCase()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+
+                // Act
+                new ActorWithUseCaseInAssembly(mediator);
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_DoesNotThrowAnException_IfTheActorHasDefinedItsSupportedAssembliesAsTheEmptySet()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+
+                // Act
+                new ActorWithDefaultAssembly(mediator);
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_DoesNotThrowAnException_IfASupportedUseCaseFromTheAssemblyIsNotAUseCase()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+
+                // act
+                new ActorWithNoUseCaseInAssembly(mediator);
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_ThrowsInvalidOperationException_IfTheActorHasDuplicateSupportedUseCases()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                InvalidOperationException exception;
+
+                // Act
+                exception = Assert.Throws<InvalidOperationException>(() => new ActorWithDuplicateSupportedUseCases(mediator));
+
+                // Assert
+                Assert.NotNull(exception);
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_DoesNotThrowAnException_IfASupprotedTypeInTheAssemblyIsDefault()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+
+                // Act
+                new ActorWithDefaultTypeInASupportedAssembly(mediator);
+            }
+
+            [Fact]
+            public void GetSupportedAssemblies_ThrowsAnAggregateExceptionWithAllInvalidOperationExceptionsFor_IfTheActorHasMulætipleDifferentTypesOfDuiplicateUseCases()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                AggregateException exception;
+
+                // Act
+                exception = Assert.Throws<AggregateException>(() => new ActorWithMultipleDuplicateAssemblyUseCases(mediator));
+
+                // Assert
+                Assert.NotNull(exception);
+            }
+        }
+
+        public class TheGetSupportedUseCasesMethod
+        {
+            public class TestUseCaseResponse
+            { }
+            public interface ITestUseCaseRequest
+                : IUseCaseRequest<TestUseCaseResponse>
+            { }
+            public interface ITestUseCase1
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+            public interface ITestUseCase2
+                : IUseCase<ITestUseCaseRequest, TestUseCaseResponse>
+            { }
+
+            public class ActorWithDefaultUseCaseType
+                : Actor
+            {
+                public ActorWithDefaultUseCaseType(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Type> GetSupportedUseCases()
+                {
+                    yield return default;
+                }
+            }
+
+            public class ActorWithNotAUseCaseSupport
+                : Actor
+            {
+                public ActorWithNotAUseCaseSupport(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Type> GetSupportedUseCases()
+                {
+                    yield return typeof(ActorTests);
+                }
+            }
+
+            public class ActorWithBothANonUseCaseAndDefaultUseCaseType
+                : Actor
+            {
+                public ActorWithBothANonUseCaseAndDefaultUseCaseType(IMediator mediator)
+                    : base(mediator)
+                { }
+
+                public override IEnumerable<Type> GetSupportedUseCases()
+                {
+                    yield return default;
+                    yield return typeof(ActorTests);
+                }
+            }
+
+            [Fact]
+            public void GetSupportedUseCases_ThrowsNullReference_IfTheActorSupportsANullUseCaseType()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                NullReferenceException exception;
+
+                // Act
+                exception = Assert.Throws<NullReferenceException>(() => new ActorWithDefaultUseCaseType(mediator));
+
+                // Assert
+                Assert.NotNull(exception);
+            }
+
+            [Fact]
+            public void GetSupportedUseCases_ThrowsInvalidOperationException_IfActorSupportedUseCaseIsNotAUseCase()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                InvalidOperationException exception;
+
+                // Act
+                exception = Assert.Throws<InvalidOperationException>(() => new ActorWithNotAUseCaseSupport(mediator));
+
+                // Assert
+                Assert.NotNull(exception);
+            }
+
+            [Fact]
+            public void GetSupportedUseCases_ThrowsAggregateException_IfMultipleErrorsWasFound()
+            {
+                // Arrange
+                IMediator mediator = Substitute.For<IMediator>();
+                AggregateException exception;
+
+                // Act
+                exception = Assert.Throws<AggregateException>(() => new ActorWithBothANonUseCaseAndDefaultUseCaseType(mediator));
+
+                // Assert
+                Assert.NotNull(exception);
             }
         }
 

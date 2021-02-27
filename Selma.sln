@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.FSM.Abstractions
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.Application.Test.Unit", "Selma.Core.Application.Test.Unit\Selma.Core.Application.Test.Unit.csproj", "{D0811241-19BF-44CB-BFB2-06D3EAB2CD86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Selma.Core.Application.Test.Integration", "Selma.Core.Application.Test.Integration\Selma.Core.Application.Test.Integration.csproj", "{62DE513E-FC14-4877-A936-1CA9214013B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Selma.Core.Application.Test.Integration", "Selma.Core.Application.Test.Integration\Selma.Core.Application.Test.Integration.csproj", "{62DE513E-FC14-4877-A936-1CA9214013B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

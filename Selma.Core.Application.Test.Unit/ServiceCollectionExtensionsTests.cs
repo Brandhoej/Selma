@@ -20,10 +20,6 @@ namespace Selma.Core.Application.Test.Unit
             protected ActorA(IMediator mediator)
                 : base(mediator)
             { }
-
-            protected ActorA(IActor successor, IMediator mediator)
-                : base(successor, mediator)
-            { }
         }
 
         public class TheAddActorMethod

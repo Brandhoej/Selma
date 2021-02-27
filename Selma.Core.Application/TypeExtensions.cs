@@ -82,14 +82,15 @@ namespace Selma.Core.Application
         /// </exception>
         internal static bool IsConcretionAssignableTo(this Type concretion, Type abstraction)
         {
-            if (concretion == null)
-            {
-                throw new ArgumentNullException(nameof(concretion));
-            }
 
             if (abstraction == null)
             {
                 throw new ArgumentNullException(nameof(abstraction));
+            }
+
+            if (concretion == null)
+            {
+                return false;
             }
 
             Type[] interfaceTypes = concretion.GetInterfaces();

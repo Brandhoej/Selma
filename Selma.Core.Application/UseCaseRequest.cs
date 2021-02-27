@@ -33,11 +33,6 @@ namespace Selma.Core.Application
 
         public static bool operator ==(UseCaseRequest<TResponse> left, IUseCaseRequest<TResponse> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -276,63 +276,42 @@ namespace Selma.Core.Application
         {
             List<Exception> exceptions = new List<Exception>();
 
-            IEnumerable<Assembly> supportedAssemblies = GetSupportedAssemblies();
-            IEnumerable<Type> supportedUseCases = GetSupportedUseCases();
-
-            IEnumerable<Type> actualSupportedAssemblyUseCases = Enumerable.Empty<Type>();
+            IEnumerable<Assembly> supportedAssemblies = GetSupportedAssemblies() ?? Enumerable.Empty<Assembly>();
+            IEnumerable<Type> supportedUseCases = (GetSupportedUseCases() ?? Enumerable.Empty<Type>())
+                .Concat(supportedAssemblies.SelectMany(assembly => assembly.GetTypes()
+                    .Where(type => IsTypeAUseCase(type))).ToList());
             IEnumerable<Type> actualSupportedUseCases = Enumerable.Empty<Type>();
 
-            if (supportedAssemblies != null)
+            try
             {
-                try
-                {
-                    /// Get <see cref="IEnumerable{Type}"/> from the <see cref="IEnumerable{Assembly}"/>.
-                    /// If none were found in the <see cref="Assembly"/> then we assume that the <see cref="Assembly"/> is incorrectly chosen.
-                    actualSupportedAssemblyUseCases = GetUseCasesFromAssemblies(supportedAssemblies);
-                }
-                catch (AggregateException aggregateException)
-                {
-                    exceptions.AddRange(aggregateException.InnerExceptions);
-                }
-                catch (Exception exception)
-                {
-                    exceptions.Add(exception);
-                }
+                /// Validate <see cref="IEnumerable{Type}"/> defined to check if they implement <see cref="IUseCase{TRequest, TResponse}"/>.
+                /// We assume that it is an error/exception if a <see cref="Type"/> does not implement <see cref="IUseCase{TRequest, TResponse}"/>.
+                /// We use <see cref="IEnumerable{Type}.ToList()"/> to ensure no lazy evaluation
+                actualSupportedUseCases = GetUseCasesFromTypes(supportedUseCases).ToList();
             }
-
-            if (supportedUseCases != null)
+            catch (AggregateException aggregateException)
             {
-                try
-                {
-                    /// Validate <see cref="IEnumerable{Type}"/> defined to check if they implement <see cref="IUseCase{TRequest, TResponse}"/>.
-                    /// We assume that it is an error/exception if a <see cref="Type"/> does not implement <see cref="IUseCase{TRequest, TResponse}"/>.
-                    actualSupportedUseCases = GetUseCasesFromTypes(supportedUseCases);
-                }
-                catch (AggregateException aggregateException)
-                {
-                    exceptions.AddRange(aggregateException.InnerExceptions);
-                }
-                catch (Exception exception)
-                {
-                    exceptions.Add(exception);
-                }
+                exceptions.AddRange(aggregateException.InnerExceptions);
+            }
+            catch (Exception exception)
+            {
+                exceptions.Add(exception);
             }
 
 
             /// We do not want to have duplicate <see cref="IUseCase{TRequest, TResponse}"/> therefore we expect it to 
             /// be an error/exception if the same <see cref="IUseCase{TRequest, TResponse}"/> is defined multiple times.
-            IEnumerable<Type> allSupportedUseCases = actualSupportedAssemblyUseCases.Concat(actualSupportedUseCases);
-            IEnumerable<Type> distinctUseCases = allSupportedUseCases.Distinct();
-            if (distinctUseCases.Count() != allSupportedUseCases.Count())
+            IEnumerable<Type> distinctUseCases = actualSupportedUseCases.Distinct();
+            if (distinctUseCases.Count() != actualSupportedUseCases.Count())
             {
-                IEnumerable<Type> duplicateUseCases = allSupportedUseCases
+                IEnumerable<Type> duplicateUseCases = actualSupportedUseCases
                     .GroupBy(x => x)
                     .Where(g => g.Count() > 1)
                     .Select(y => y.Key);
 
                 foreach (Type duplicateUseCase in duplicateUseCases)
                 {
-                    exceptions.Add(new ArgumentException($"{duplicateUseCase.Name} was defined multiple times"));
+                    exceptions.Add(new InvalidOperationException($"{duplicateUseCase.Name} was defined multiple times"));
                 }
             }
 
@@ -347,32 +326,35 @@ namespace Selma.Core.Application
                 throw new AggregateException($"One or more exceptions were found when retrieving all supported use cases for the actor {GetType().Name}", exceptions);
             }
 
-            return allSupportedUseCases ?? Enumerable.Empty<Type>();
+            return actualSupportedUseCases;
         }
 
         private IEnumerable<Type> GetUseCasesFromTypes(IEnumerable<Type> types)
         {
             ICollection<Exception> exceptions = new List<Exception>();
-            IEnumerable<Type> result =  types
+
+            /// We use <see cref="IEnumerable{Type}.ToList()"/> to ensure that lazy evaluation is not used
+            IEnumerable<Type> result = types
                 .Where(type =>
                 {
-                    if (type == null)
+                    if (type is null)
                     {
                         exceptions.Add(new NullReferenceException($"A use case type was a null reference"));
+                        return false;
                     }
-                    else
+                    else if(!IsTypeAUseCase(type))
                     {
-                        bool isUseCase = type.IsConcretionAssignableTo(typeof(IUseCase<,>));
-                        if (!isUseCase)
-                        {
-                            exceptions.Add(new InvalidOperationException($"{type.Name} does not implement {typeof(IUseCase<,>)}"));
-                        }
-                        return isUseCase;
+                        exceptions.Add(new InvalidOperationException($"{type.Name} does not implement {typeof(IUseCase<,>)}"));
+                        return false;
                     }
-                    return false;
-                });
+                    return true;
+                }).ToList();
 
-            if (exceptions.Count >= 1)
+            if (exceptions.Count == 1)
+            {
+                throw exceptions.First();
+            }
+            else if (exceptions.Count >= 1)
             {
                 throw new AggregateException(exceptions);
             }
@@ -380,42 +362,8 @@ namespace Selma.Core.Application
             return result;
         }
 
-        private IEnumerable<Type> GetUseCasesFromAssemblies(IEnumerable<Assembly> assemblies)
-        {
-            ICollection<Exception> exceptions = new List<Exception>();
-            IEnumerable<Type> result = assemblies
-                .SelectMany(assembly =>
-                {
-                    if (assembly == null)
-                    {
-                        exceptions.Add(new NullReferenceException($"A use case assembly was a null reference"));
-                    }
-                    else
-                    {
-                        /// Retrieve all <see cref="IEnumerable{Type}"/> from the <see cref="Assembly"/> which 
-                        /// are assignable to <see cref="IUseCase{TRequest, TResponse}"/> to filter all unwanted <see cref="IEnumerable{Type}"/>
-                        IEnumerable<Type> types = assembly.GetTypes()
-                            .Where(type => type.IsConcretionAssignableTo(typeof(IUseCase<,>)));
-
-                        if (types.Count() == 0)
-                        {
-                            exceptions.Add(new InvalidOperationException($"{assembly.FullName} does have any types of {typeof(IUseCase<,>)}"));
-                        }
-
-                        return types;
-                    }
-
-                    /// <see cref="Enumerable.Empty{Type}"/> the <see cref="Assembly"/> was null
-                    return Enumerable.Empty<Type>();
-                });
-
-            if (exceptions.Count >= 1)
-            {
-                throw new AggregateException(exceptions);
-            }
-
-            return result;
-        }
+        private bool IsTypeAUseCase(Type type)
+            => type.IsConcretionAssignableTo(typeof(IUseCase<,>));
 
         public static bool operator !=(Actor left, IActor right)
             => !(left == right);
