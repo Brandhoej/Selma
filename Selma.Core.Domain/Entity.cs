@@ -149,11 +149,6 @@ namespace Selma.Core.Domain
         /// </returns>
         public static bool operator ==(Entity<TId> left, IEntity<TId> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

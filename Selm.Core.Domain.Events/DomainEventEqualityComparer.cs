@@ -10,12 +10,7 @@ namespace Selma.Core.Domain.Events
     {
         public new bool Equals(object x, object y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -30,12 +25,7 @@ namespace Selma.Core.Domain.Events
 
         public bool Equals(IDomainEvent x, IDomainEvent y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }

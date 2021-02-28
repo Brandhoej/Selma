@@ -28,7 +28,8 @@
       <IncludeAssets>all</IncludeAssets>
     </ProjectReference>
     <ProjectReference Include="..\Selma.Core.MessageQueue.MediatR\Selma.Core.MessageQueue.MediatR.csproj">
-      <PrivateAssets>all</PrivateAssets>
+      <PrivateAssets></PrivateAssets>
+      <IncludeAssets>all</IncludeAssets>
     </ProjectReference>
   </ItemGroup>
 

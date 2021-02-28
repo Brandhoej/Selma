@@ -1,9 +1,9 @@
 ﻿Dependencies:
 Private:
- - Selma.Core.Application.Abstractions (9.0.0)
+ - Selma.Core.Application.Abstractions
  - Microsoft.Extensions.DependencyInjection.Abstractions (5.0.0)
 Public:
- - MediatR
+ - MediatR (9.0.0)
 
 Public API
  - Public interfaces:
@@ -28,9 +28,3 @@ Features
  - UseCaseRequest
  - ServiceCollectionExtensions
    - WIP: Allow MediatR instantiation where the assemblies of Actors are automatically supplied.
-
-TODO Unit testing:
-- (Y) Actor
-- (Y) UseCase
-- (Y) UseCaseRequest
-- ServiceCollectionExtensions

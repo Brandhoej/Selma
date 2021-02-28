@@ -15,38 +15,59 @@ namespace Selma.Core.Domain.Events
         , INotification
     {
         /// <summary>
-        ///     The singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/>.
+        ///     The singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/> if non were given in the constructor.
         /// </summary>
         /// <value>
-        ///     Property <see cref="Producer"/> represents the singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/>.
+        ///     Property <see cref="StandardProducer"/> represents the singleton <see cref="IMessageQueueProducer<IDomainEvent>"/> used by <see cref="IDomainEvent"/>.
         /// </value>
         /// <exception cref="InvalidOperationException">
-        ///     Thrown when someone tries to set the <see cref="Producer"/> after it has already be set.
+        ///     Thrown when someone tries to set the <see cref="StandardProducer"/> after it has already be set.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if the <c>value</c> is <c>null</c>.
         /// </exception>
-        public static IMessageQueueProducer<IDomainEvent> Producer
+        public static IMessageQueueProducer<IDomainEvent> StandardProducer
         {
-            get => m_producer;
+            get => m_standardProducer;
             set
             {
-                /// We must ensure that the queue does not break state rules by setting the <see cref="m_producer"/> multiple times.
-                if (m_producer != null)
+                /// We must ensure that the queue does not break state rules by setting the <see cref="m_standardProducer"/> multiple times.
+                if (m_standardProducer != null)
                 {
-                    throw new InvalidOperationException($"The static {nameof(Producer)} for the {nameof(DomainEvent)} instances already has the value {m_producer.GetType().Name}");
+                    throw new InvalidOperationException($"The static {nameof(StandardProducer)} for the {nameof(DomainEvent)} instances already has the value {m_standardProducer.GetType().Name}");
                 }
-                m_producer = value ?? throw new ArgumentNullException(nameof(value), $"The value of the {nameof(Producer)} can not be null");
+                m_standardProducer = value ?? throw new ArgumentNullException(nameof(value), $"The value of the {nameof(StandardProducer)} can not be null");
             }
         }
 
         /// <summary>
-        ///     The private backfield used to store the return value for <see cref="Producer"/>.
+        ///     The private backfield used to store the return value for <see cref="StandardProducer"/>.
         /// </summary>
-        private static IMessageQueueProducer<IDomainEvent> m_producer;
+        private static IMessageQueueProducer<IDomainEvent> m_standardProducer;
 
         /// <summary>
-        ///     Enques the current instance into the <see cref="Producer"/>
+        ///     Constructs a <see cref="DomainEvent"/> with the <see cref="StandardProducer"/> as the producer used to handle its enqueue
+        /// </summary>
+        public DomainEvent()
+            : this(StandardProducer)
+        { }
+
+        /// <summary>
+        ///     Constructs a <see cref="DomainEvent"/> with a specific <see cref="IMessageQueueProducer{TMessage}"/> given by the <paramref name="producer"/> parameter.
+        /// </summary>
+        /// <param name="producer">
+        ///     The <see cref="IMessageQueueProducer{TMessage}"/> used to enqueue this event.
+        /// </param>
+        public DomainEvent(IMessageQueueProducer<IDomainEvent> producer)
+            => Producer = producer ?? throw new ArgumentNullException(nameof(producer));
+
+        /// <summary>
+        ///     The <see cref="IMessageQueueProducer{TMessage}"/> used to handle this <see cref="DomainEvent"/> enqueueing.
+        /// </summary>
+        private IMessageQueueProducer<IDomainEvent> Producer { get; }
+
+        /// <summary>
+        ///     Enques the current instance into the <see cref="StandardProducer"/>
         /// </summary>
         public void Enqueue()
             => Producer.Enqueue(this);
@@ -58,25 +79,13 @@ namespace Selma.Core.Domain.Events
             => new DomainEventEqualityComparer().Equals(this, other);
 
         public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
+            => new DomainEventEqualityComparer().GetHashCode(this);
 
         public static bool operator !=(DomainEvent left, IDomainEvent right)
             => !(left == right);
 
         public static bool operator ==(DomainEvent left, IDomainEvent right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -9,9 +9,6 @@ using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Samples.ActorsUseCases.Domain;
-using Selma.Core.FSM;
-using System.Collections.Generic;
-using Selma.Core.FSM.Abstractions;
 
 namespace Samples.ActorsUseCases.CLI
 {
@@ -43,7 +40,7 @@ namespace Samples.ActorsUseCases.CLI
             }
 
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
-            DomainEvent.Producer = serviceProvider.GetService<IMessageQueueProducer<IDomainEvent>>();
+            DomainEvent.StandardProducer = serviceProvider.GetService<IMessageQueueProducer<IDomainEvent>>();
 
             User user = serviceProvider.GetService<User>();
             UserActorSample(user).Wait();
