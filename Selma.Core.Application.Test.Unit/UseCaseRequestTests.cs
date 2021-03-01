@@ -20,12 +20,12 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectIsNull()
             {
                 // Arrange
-                UseCaseRequest<ResponseA> useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
-                UseCaseRequest<ResponseA> other = default;
+                object useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object other = default;
                 bool actual;
 
                 // Act
-                actual = useCaseRequest.Equals(other as object);
+                actual = useCaseRequest.Equals(other);
 
                 // Assert
                 Assert.False(actual);
@@ -35,8 +35,8 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectIsDifferentType()
             {
                 // Arrange
-                UseCaseRequest<ResponseA> useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
-                UseCaseRequest<ResponseB> other = Substitute.ForPartsOf<UseCaseRequest<ResponseB>>();
+                object useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object other = 123;
                 bool actual;
 
                 // Act
@@ -50,12 +50,12 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectsAreDifferentReferences()
             {
                 // Arrange
-                UseCaseRequest<ResponseA> useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
-                UseCaseRequest<ResponseA> other = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object other = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
                 bool actual;
 
                 // Act
-                actual = useCaseRequest.Equals(other as object);
+                actual = useCaseRequest.Equals(other);
 
                 // Assert
                 Assert.False(actual);
@@ -65,11 +65,12 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsTrue_WhenTheObjectsAreTheSame()
             {
                 // Arrange
-                UseCaseRequest<ResponseA> useCaseRequest = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object useCaseRequestA = Substitute.ForPartsOf<UseCaseRequest<ResponseA>>();
+                object useCaseRequestB = useCaseRequestA;
                 bool actual;
 
                 // Act
-                actual = useCaseRequest.Equals(useCaseRequest as object);
+                actual = useCaseRequestA.Equals(useCaseRequestB);
 
                 // Assert
                 Assert.True(actual);

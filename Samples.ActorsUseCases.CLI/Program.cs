@@ -4,6 +4,7 @@ using Selma.Core.Application;
 using Selma.Core.Domain.Events;
 using Selma.Core.Domain.Events.Abstractions;
 using Selma.Core.MessageQueue.Abstractions;
+using Selma.Core.MessageQueue.MediatR;
 using Samples.ActorsUseCases.Domain.ProfileRoot;
 using Samples.ActorsUseCases.Application.UseCases;
 using Samples.ActorsUseCases.Application;
@@ -29,13 +30,15 @@ namespace Samples.ActorsUseCases.CLI
             if (deferredEventDispatcher)
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddDeferredDomainEventMessageQueue();
+                serviceCollection.AddDeferredMessageQueue<IDomainEvent>();
+                // serviceCollection.AddDeferredDomainEventMessageQueue();
 #pragma warning restore CS0162 // Unreachable code detected
             }
             else
             {
 #pragma warning disable CS0162 // Unreachable code detected
-                serviceCollection.AddImmediateDomainEventMessageQueue();
+                serviceCollection.AddImmediateMessageQueue<IDomainEvent>();
+                // serviceCollection.AddImmediateDomainEventMessageQueue();
 #pragma warning restore CS0162 // Unreachable code detected
             }
 

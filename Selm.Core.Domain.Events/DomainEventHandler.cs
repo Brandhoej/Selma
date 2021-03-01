@@ -19,16 +19,14 @@ namespace Selma.Core.Domain.Events
         , IDomainEvent
         , INotification
     {
-        public override bool Equals(object obj)
-            => new DomainEventHandlerEqualityComparer<T>().Equals(this, obj);
-
         public bool Equals(IDomainEventHandler<T> other)
             => new DomainEventHandlerEqualityComparer<T>().Equals(this, other);
 
+        public override bool Equals(object obj)
+            => new DomainEventHandlerEqualityComparer<T>().Equals(this, obj);
+
         public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+            => new DomainEventHandlerEqualityComparer<T>().GetHashCode(this);
 
         /// <summary>
         ///     <inheritdoc cref="IDomainEventHandler{T}"/>
@@ -44,21 +42,11 @@ namespace Selma.Core.Domain.Events
         /// </returns>
         public abstract Task Handle(T notification, CancellationToken cancellationToken = default);
 
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
         public static bool operator !=(DomainEventHandler<T> left, IDomainEventHandler<T> right)
             => !(left == right);
 
         public static bool operator ==(DomainEventHandler<T> left, IDomainEventHandler<T> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -23,8 +23,8 @@
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
     <ProjectReference Include="..\Selma.Core.MessageQueue\Selma.Core.MessageQueue.csproj">
-      <PrivateAssets></PrivateAssets>
-      <IncludeAssets>all</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets></IncludeAssets>
     </ProjectReference>
   </ItemGroup>
 

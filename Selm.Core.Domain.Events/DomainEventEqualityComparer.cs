@@ -1,6 +1,7 @@
 ﻿using Selma.Core.Domain.Events.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Domain.Events
 {
@@ -44,9 +45,9 @@ namespace Selma.Core.Domain.Events
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IDomainEvent);
+            => obj is null ? 0 : obj.GetHashCode();
 
         public int GetHashCode(IDomainEvent obj)
-            => obj.GetHashCode();
+            => RuntimeHelpers.GetHashCode(obj);
     }
 }

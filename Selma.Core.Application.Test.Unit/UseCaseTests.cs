@@ -19,12 +19,12 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectIsNull()
             {
                 // Arrange
-                UseCase<RequestA, Response> useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
-                UseCase<RequestA, Response> other = default;
+                object useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
+                object other = default;
                 bool actual;
 
                 // Act
-                actual = useCase.Equals(other as object);
+                actual = useCase.Equals(other);
 
                 // Assert
                 Assert.False(actual);
@@ -34,8 +34,8 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectIsDifferentType()
             {
                 // Arrange
-                UseCase<RequestA, Response> useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
-                UseCase<RequestA, Response> other = default;
+                object useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
+                object other = 123;
                 bool actual;
 
                 // Act
@@ -49,8 +49,8 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsFalse_WhenTheObjectsAreDifferentReferences()
             {
                 // Arrange
-                UseCase<RequestA, Response> useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
-                UseCase<RequestA, Response> other = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
+                object useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
+                object other = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
                 bool actual;
 
                 // Act
@@ -64,11 +64,11 @@ namespace Selma.Core.Application.Test.Unit
             public void Equals_ReturnsTrue_WhenTheObjectsAreTheSame()
             {
                 // Arrange
-                UseCase<RequestA, Response> useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
+                object useCase = Substitute.ForPartsOf<UseCase<RequestA, Response>>();
                 bool actual;
 
                 // Act
-                actual = useCase.Equals(useCase as object);
+                actual = useCase.Equals(useCase);
 
                 // Assertface
 

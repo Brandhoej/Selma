@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Samples.REST.Domain.WeatherForecastRoot;
-using Selma.Core.Domain.Events;
+using Selma.Core.MessageQueue.MediatR;
 using Selma.Core.Infrastructure.Persistent.Abstractions;
 using System;
+using Selma.Core.Domain.Events.Abstractions;
 
 namespace Samples.REST.Domain
 {
@@ -13,7 +14,7 @@ namespace Samples.REST.Domain
         {
             serviceCollection.AddDbContext<DomainContext>(dbContextOptionsBuilder);
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork<DomainContext>>();
-            serviceCollection.AddImmediateDomainEventMessageQueue();
+            serviceCollection.AddImmediateMessageQueue<IDomainEvent>();
 
             serviceCollection.AddScoped<IWeatherForecastRepository, WeatherForecastRepository>();
             serviceCollection.AddScoped<IWeatherForecastFactory, WeatherForecastFactory>();

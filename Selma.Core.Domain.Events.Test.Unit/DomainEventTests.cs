@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MediatR;
 using NSubstitute;
 using Selma.Core.Domain.Events.Abstractions;
-using Selma.Core.MessageQueue;
 using Selma.Core.MessageQueue.Abstractions;
-using Selma.Core.MessageQueue.MediatR;
 using Xunit;
 
 namespace Selma.Core.Domain.Events.Test.Unit
@@ -59,17 +54,13 @@ namespace Selma.Core.Domain.Events.Test.Unit
             public class ConcreteDomainEvent
                 : DomainEvent
             {
-                public ConcreteDomainEvent()
-                    : base()
-                { }
-
                 public ConcreteDomainEvent(IMessageQueueProducer<IDomainEvent> producer)
                     : base(producer)
                 { }
             }
 
             [Fact]
-            public void Test()
+            public void Enqueue_CallsEnqueueWithTheDomainEvent_WithTheDomainEventAsParameter()
             {
                 // Arrange
                 IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
@@ -79,23 +70,300 @@ namespace Selma.Core.Domain.Events.Test.Unit
                 domainEvent.Enqueue();
 
                 // Assert
-                producer.Received(1).Enqueue(domainEvent);
+                producer.Received(1).Enqueue(Arg.Any<ConcreteDomainEvent>());
             }
         }
 
         public class TheEqualsMethod
         {
+            public class ConcreteDomainEvent
+                : DomainEvent
+            {
+                public ConcreteDomainEvent(IMessageQueueProducer<IDomainEvent> producer)
+                    : base(producer)
+                { }
+            }
 
+            [Fact]
+            public void Equals_ReturnsFalse_WhenOtherIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                object domainEvent = new ConcreteDomainEvent(producer);
+                object other = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void Equals_ReturnsFalse_WhenOtherIsDifferentType()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                object domainEvent = new ConcreteDomainEvent(producer);
+                object other = 123;
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void Equals_ReturnsTrue_WhenTheObjectsAreTheSame()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                object domainEvent = new ConcreteDomainEvent(producer);
+                object other = domainEvent;
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.True(actual);
+            }
+
+            [Fact]
+            public void Equals_ReturnsFalse_WhenOtherDomainEventIsDifferentReference()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IDomainEvent domainEvent = new ConcreteDomainEvent(producer);
+                IDomainEvent other = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void Equals_ReturnsFalse_WhenOtherDomainEventIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IDomainEvent domainEvent = new ConcreteDomainEvent(producer);
+                IDomainEvent other = default;
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void Equals_ReturnsTrue_WhenTheDomainEventAreTheSame()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IDomainEvent domainEvent = new ConcreteDomainEvent(producer);
+                IDomainEvent other = domainEvent;
+                bool actual;
+
+                // Act
+                actual = domainEvent.Equals(other);
+
+                // Assert
+                Assert.True(actual);
+            }
         }
 
         public class TheGetHashCodeMethod
         {
+            public class ConcreteDomainEvent
+                : DomainEvent
+            {
+                public ConcreteDomainEvent(IMessageQueueProducer<IDomainEvent> producer)
+                    : base(producer)
+                { }
+            }
 
+            [Fact]
+            public void GetHashCode_IsInfluencedByTheProducer_IsNotTheSameWithDifferentProducers()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producerA = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IMessageQueueProducer<IDomainEvent> producerB = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IDomainEvent domainEventA = new ConcreteDomainEvent(producerA);
+                IDomainEvent domainEventB = new ConcreteDomainEvent(producerB);
+                int hashA, hashB;
+
+                // Act
+                hashA = domainEventA.GetHashCode();
+                hashB = domainEventB.GetHashCode();
+
+                // Assert
+                Assert.NotEqual(hashA, hashB);
+            }
+
+            [Fact]
+            public void GetHashCode_IsAlsoInfluencedByTheRuntimeInstance_IfTheReferencesAreNotEqualTheHashCodesAreNotEqual()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                IDomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                IDomainEvent domainEventB = new ConcreteDomainEvent(producer);
+                int hashA, hashB;
+
+                // Act
+                hashA = domainEventA.GetHashCode();
+                hashB = domainEventB.GetHashCode();
+
+                // Assert
+                Assert.NotEqual(hashA, hashB);
+            }
         }
 
         public class TheOperators
         {
+            public class ConcreteDomainEvent
+                : DomainEvent
+            {
+                public ConcreteDomainEvent(IMessageQueueProducer<IDomainEvent> producer)
+                    : base(producer)
+                { }
+            }
 
+            [Fact]
+            public void EqualEqual_ReturnsFalse_IfLeftIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = default;
+                DomainEvent domainEventB = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEventA == domainEventB;
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void EqualEqual_ReturnsFalse_IfRightIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = default;
+                bool actual;
+
+                // Act
+                actual = domainEventA == domainEventB;
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void EqualEqual_ReturnsFalse_IfActorsAreNotEqual()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEventA == domainEventB;
+
+                // Assert
+                Assert.False(actual);
+            }
+
+            [Fact]
+            public void EqualEqual_ReturnsTrue_IfActorsAreEqual()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = domainEventA;
+                bool actual;
+
+                // Act
+                actual = domainEventA == domainEventB;
+
+                // Assert
+                Assert.True(actual);
+            }
+
+            [Fact]
+            public void BangEqual_ReturnsTrue_IfLeftIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = default;
+                DomainEvent domainEventB = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEventA != domainEventB;
+
+                // Assert
+                Assert.True(actual);
+            }
+
+            [Fact]
+            public void BangEqual_ReturnsTrue_IfRightIsNull()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = default;
+                bool actual;
+
+                // Act
+                actual = domainEventA != domainEventB;
+
+                // Assert
+                Assert.True(actual);
+            }
+
+            [Fact]
+            public void BangEqual_ReturnsTrue_IfActorsAreNotEqual()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = new ConcreteDomainEvent(producer);
+                bool actual;
+
+                // Act
+                actual = domainEventA != domainEventB;
+
+                // Assert
+                Assert.True(actual);
+            }
+
+            [Fact]
+            public void BangEqual_ReturnsFalse_IfActorsAreEqual()
+            {
+                // Arrange
+                IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
+                DomainEvent domainEventA = new ConcreteDomainEvent(producer);
+                DomainEvent domainEventB = domainEventA;
+                bool actual;
+
+                // Act
+                actual = domainEventA != domainEventB;
+
+                // Assert
+                Assert.False(actual);
+            }
         }
     }
 }

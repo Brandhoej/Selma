@@ -52,7 +52,7 @@ namespace Selma.Core.Application
         }
 
         public int GetHashCode(object obj)
-            => obj.GetHashCode();
+            => obj is null ? 0 : obj.GetHashCode();
 
         public int GetHashCode(IUseCase<TRequest, TResponse> obj)
             => RuntimeHelpers.GetHashCode(obj);

@@ -2,6 +2,7 @@
 using Selma.Core.Domain.Events.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Domain.Events
 {
@@ -15,12 +16,7 @@ namespace Selma.Core.Domain.Events
     {
         public new bool Equals(object x, object y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -35,12 +31,7 @@ namespace Selma.Core.Domain.Events
 
         public bool Equals(IDomainEventHandler<T> x, IDomainEventHandler<T> y)
         {
-            if (x is null)
-            {
-                return false;
-            }
-
-            if (y is null)
+            if (x is null || y is null)
             {
                 return false;
             }
@@ -59,9 +50,9 @@ namespace Selma.Core.Domain.Events
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IDomainEventHandler<T>);
+            => obj is null ? 0 : obj.GetHashCode();
 
         public int GetHashCode(IDomainEventHandler<T> obj)
-            => obj.GetHashCode();
+            => RuntimeHelpers.GetHashCode(obj);
     }
 }
