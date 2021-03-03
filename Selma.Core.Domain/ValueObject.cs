@@ -8,7 +8,7 @@ namespace Selma.Core.Domain
     /// <summary>
     ///     <inheritdoc cref="IValueObject"/>
     ///     
-    ///     C#9 TODO: Make this a record to enforce immutability of reference types.
+    ///     C#8 TODO: Make this a record to enforce immutability of reference types.
     /// </summary>
     public abstract class ValueObject 
         : IValueObject
@@ -25,7 +25,33 @@ namespace Selma.Core.Domain
         ///     otherwise, false.
         /// </returns>
         public override bool Equals(object obj)
-            => new ValueObjectEqualityComparer().Equals(this, obj);
+        {
+            if (obj is ValueObject otherValueObject)
+            {
+                return Equals(otherValueObject);
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     Returns a value indicating whether this <see cref="IValueObject"/> is equal to a specified <see cref="ValueObject"/>.
+        /// </summary>
+        /// <param name="other">
+        ///     A <see cref="ValueObject"/> to compare with this instance of <see cref="ValueObject"/>.
+        /// </param>
+        /// <returns>
+        ///     true if all components from this <see cref="GetEqualityComponents"/> is sequentially equal
+        ///     to that of the other;
+        ///     otherwise, false.
+        /// </returns>
+        public bool Equals(IValueObject other)
+        {
+            if (other is ValueObject otherValueObject)
+            {
+                return Equals(otherValueObject);
+            }
+            return false;
+        }
 
         /// <summary>
         ///     Returns a value indicating whether this <see cref="ValueObject"/> is equal to a specified <see cref="ValueObject"/>.
@@ -38,8 +64,8 @@ namespace Selma.Core.Domain
         ///     to that of the other;
         ///     otherwise, false.
         /// </returns>
-        public bool Equals(ValueObject other)
-            => GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        public bool Equals(ValueObject other) 
+            => GetType() == other.GetType() && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
 
         /// <summary>
         ///     Returns the hash code for this instance.
@@ -51,12 +77,16 @@ namespace Selma.Core.Domain
         /// </returns>
         public override int GetHashCode()
         {
+            HashCode hashCode = new HashCode();
+            hashCode.Add(GetType());
+
             return GetEqualityComponents()
-                .Aggregate(new HashCode(), (hashCode, curr) =>
+                .Aggregate(hashCode, (hashCode, curr) =>
                 {
                     hashCode.Add(curr);
                     return hashCode;
-                }).ToHashCode();
+                })
+                .ToHashCode();
         }
 
         /// <summary>
@@ -114,7 +144,7 @@ namespace Selma.Core.Domain
         ///     False if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, true.
         /// </returns>
-        public static bool operator !=(ValueObject left, ValueObject right)
+        public static bool operator !=(ValueObject left, IValueObject right)
             => !(left == right);
 
         /// <summary>
@@ -130,14 +160,13 @@ namespace Selma.Core.Domain
         ///     True if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, false.
         /// </returns>
-        public static bool operator ==(ValueObject left, ValueObject right)
+        public static bool operator ==(ValueObject left, IValueObject right)
         {
-            if (left is null && right is null)
-                return true;
-
             if (left is null || right is null)
+            {
                 return false;
-            
+            }
+
             return left.Equals(right);
         }
     }

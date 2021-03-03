@@ -15,8 +15,6 @@
       <IncludeAssets></IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\Selma.Core.FSM.Abstractions\Selma.Core.FSM.Abstractions.csproj" />
-    <ProjectReference Include="..\Selma.Core.FSM\Selma.Core.FSM.csproj" />
   </ItemGroup>
 
 </Project>

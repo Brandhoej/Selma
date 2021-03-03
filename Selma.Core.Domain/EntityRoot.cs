@@ -81,15 +81,6 @@ namespace Selma.Core.Domain
             => base.GetHashCode();
 
         /// <summary>
-        ///     Returns a string representation of the <see cref="EntityRoot{TId}"/>.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="string"/> representation.
-        /// </returns>
-        public override string ToString()
-            => $"{GetType().Name} - Root '{Id}'";
-
-        /// <summary>
         ///     Inequality operator implementation of the <see cref="EntityRoot{TId}"/>.
         /// </summary>
         /// <param name="left">
@@ -102,7 +93,7 @@ namespace Selma.Core.Domain
         ///     False if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, true.
         /// </returns>
-        public static bool operator !=(EntityRoot<TId> left, EntityRoot<TId> right)
+        public static bool operator !=(EntityRoot<TId> left, IEntityRoot<TId> right)
             => !(left == right);
 
         /// <summary>
@@ -118,13 +109,8 @@ namespace Selma.Core.Domain
         ///     True if <paramref name="left"/> is equal to <paramref name="right"/>;
         ///     otherwise, false.
         /// </returns>
-        public static bool operator ==(EntityRoot<TId> left, EntityRoot<TId> right)
+        public static bool operator ==(EntityRoot<TId> left, IEntityRoot<TId> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -270,7 +270,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void EqualEqual_ReturnsFalse_IfActorsAreNotEqual()
+            public void EqualEqual_ReturnsFalse_IfDomainEventsAreNotEqual()
             {
                 // Arrange
                 IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
@@ -286,7 +286,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void EqualEqual_ReturnsTrue_IfActorsAreEqual()
+            public void EqualEqual_ReturnsTrue_IfDomainEventsAreEqual()
             {
                 // Arrange
                 IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
@@ -334,7 +334,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void BangEqual_ReturnsTrue_IfActorsAreNotEqual()
+            public void BangEqual_ReturnsTrue_IfDomainEventsAreNotEqual()
             {
                 // Arrange
                 IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();
@@ -350,7 +350,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void BangEqual_ReturnsFalse_IfActorsAreEqual()
+            public void BangEqual_ReturnsFalse_IfDomainEventsAreEqual()
             {
                 // Arrange
                 IMessageQueueProducer<IDomainEvent> producer = Substitute.For<IMessageQueueProducer<IDomainEvent>>();

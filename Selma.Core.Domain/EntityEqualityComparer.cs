@@ -1,4 +1,5 @@
 ﻿using Selma.Core.Domain.Abstractions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -57,6 +58,11 @@ namespace Selma.Core.Domain
             => GetHashCode(obj as IEntity<TId>);
 
         public int GetHashCode(IEntity<TId> obj)
-            => obj.GetHashCode();
+        {
+            HashCode hashCode = new HashCode();
+            hashCode.Add(obj.Id);
+            hashCode.Add(typeof(TId));
+            return hashCode.ToHashCode();
+        }
     }
 }

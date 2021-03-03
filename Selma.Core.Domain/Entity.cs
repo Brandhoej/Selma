@@ -107,16 +107,7 @@ namespace Selma.Core.Domain
         ///     A <see cref="int"/> hash code.
         /// </returns>
         public override int GetHashCode()
-            => Id.GetHashCode();
-
-        /// <summary>
-        ///     Returns a string representation of the <see cref="Entity{TId}"/>.
-        /// </summary>
-        /// <returns>
-        ///     A <see cref="string"/> representation.
-        /// </returns>
-        public override string ToString()
-            => $"{GetType().Name} - Root '{Id}'";
+            => new EntityEqualityComparer<TId>().GetHashCode(this);
 
         /// <summary>
         ///     Inequality operator implementation of the <see cref="Entity{TId}"/>.

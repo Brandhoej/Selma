@@ -1,4 +1,6 @@
-﻿namespace Selma.Core.Domain.Abstractions
+﻿using System;
+
+namespace Selma.Core.Domain.Abstractions
 {
     /// <summary>
     ///     Represents an immutable value object from domain driven design:
@@ -14,5 +16,6 @@
     /// </summary>
     public interface IValueObject
         : IDomainObject
+        , IEquatable<IValueObject>
     { }
 }

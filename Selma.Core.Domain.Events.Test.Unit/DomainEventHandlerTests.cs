@@ -208,7 +208,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void EqualEqual_ReturnsFalse_IfActorsAreNotEqual()
+            public void EqualEqual_ReturnsFalse_IfDomainEventHandlersAreNotEqual()
             {
                 // Arrange
                 AbstractDomainEventHandler domainEventHandlerA = Substitute.ForPartsOf<AbstractDomainEventHandler>();
@@ -223,7 +223,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void EqualEqual_ReturnsTrue_IfActorsAreEqual()
+            public void EqualEqual_ReturnsTrue_IfDomainEventHandlersAreEqual()
             {
                 // Arrange
                 AbstractDomainEventHandler domainEventHandlerA = Substitute.ForPartsOf<AbstractDomainEventHandler>();
@@ -268,7 +268,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void BangEqual_ReturnsTrue_IfActorsAreNotEqual()
+            public void BangEqual_ReturnsTrue_IfDomainEventHandlersAreNotEqual()
             {
                 // Arrange
                 AbstractDomainEventHandler domainEventHandlerA = Substitute.ForPartsOf<AbstractDomainEventHandler>();
@@ -283,7 +283,7 @@ namespace Selma.Core.Domain.Events.Test.Unit
             }
 
             [Fact]
-            public void BangEqual_ReturnsFalse_IfActorsAreEqual()
+            public void BangEqual_ReturnsFalse_IfDomainEventHandlersAreEqual()
             {
                 // Arrange
                 AbstractDomainEventHandler domainEventHandlerA = Substitute.ForPartsOf<AbstractDomainEventHandler>();
