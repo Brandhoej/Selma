@@ -36,10 +36,7 @@ namespace Selma.Core.Infrastructure.Persistent
             => new UnitOfWorkEqualityComparer<TContext>().Equals(this, other);
 
         public override int GetHashCode()
-            => base.GetHashCode();
-
-        public override string ToString()
-            => base.ToString();
+            => new UnitOfWorkEqualityComparer<TContext>().GetHashCode(this);
 
         IRepository<TEntity> IUnitOfWork.Repository<TEntity>()
             => AbstractRepositoryFactory.Repository<TEntity>();
@@ -52,11 +49,6 @@ namespace Selma.Core.Infrastructure.Persistent
 
         public static bool operator ==(UnitOfWork<TContext> left, IUnitOfWork right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

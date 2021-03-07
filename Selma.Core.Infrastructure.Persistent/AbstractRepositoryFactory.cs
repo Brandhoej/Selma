@@ -32,21 +32,13 @@ namespace Selma.Core.Infrastructure.Persistent
             => new AbstractRepositoryFactoryEqualityComparer<TContext>().Equals(this, other);
 
         public override int GetHashCode()
-            => base.GetHashCode();
-
-        public override string ToString()
-            => base.ToString();
+            => new AbstractRepositoryFactoryEqualityComparer<TContext>().GetHashCode(this);
 
         public static bool operator !=(AbstractRepositoryFactory<TContext> left, IAbstractRepositoryFactory<TContext> right)
             => !(left == right);
 
         public static bool operator ==(AbstractRepositoryFactory<TContext> left, IAbstractRepositoryFactory<TContext> right)
         {
-            if (left is null && right is null)
-            {
-                return false;
-            }
-
             if (left is null || right is null)
             {
                 return false;

@@ -1,6 +1,7 @@
 ﻿using Selma.Core.Infrastructure.Persistent.Abstractions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Infrastructure.Persistent
 {
@@ -60,6 +61,6 @@ namespace Selma.Core.Infrastructure.Persistent
             => GetHashCode(obj as IAbstractRepositoryFactory<TContext>);
 
         public int GetHashCode(IAbstractRepositoryFactory<TContext> obj)
-            => obj.GetHashCode();
+            => RuntimeHelpers.GetHashCode(obj);
     }
 }
