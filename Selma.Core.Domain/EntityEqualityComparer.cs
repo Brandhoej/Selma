@@ -55,10 +55,15 @@ namespace Selma.Core.Domain
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IEntity<TId>);
+            => obj is null ? 0 : GetHashCode(obj as IEntity<TId>);
 
         public int GetHashCode(IEntity<TId> obj)
         {
+            if (obj is null)
+            {
+                return 0;
+            }
+
             HashCode hashCode = new HashCode();
             hashCode.Add(obj.Id);
             hashCode.Add(typeof(TId));

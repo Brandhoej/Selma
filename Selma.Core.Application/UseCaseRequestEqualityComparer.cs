@@ -13,7 +13,12 @@ namespace Selma.Core.Application
     {
         public new bool Equals(object x, object y)
         {
-            if (x is null || y is null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -28,7 +33,12 @@ namespace Selma.Core.Application
 
         public bool Equals(IUseCaseRequest<TResponse> x, IUseCaseRequest<TResponse> y)
         {
-            if (x is null || y is null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -47,9 +57,9 @@ namespace Selma.Core.Application
         }
 
         public int GetHashCode(object obj)
-            => obj is null ? 0 : obj.GetHashCode();
+            => obj is null ? 0 : GetHashCode(obj as IUseCaseRequest<TResponse>);
 
         public int GetHashCode(IUseCaseRequest<TResponse> obj)
-            => RuntimeHelpers.GetHashCode(obj);
+            => obj is null ? 0 : RuntimeHelpers.GetHashCode(obj);
     }
 }

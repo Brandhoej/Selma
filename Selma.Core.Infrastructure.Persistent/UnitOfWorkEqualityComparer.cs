@@ -59,9 +59,9 @@ namespace Selma.Core.Infrastructure.Persistent
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode((obj ?? throw new ArgumentNullException(nameof(obj)))as IUnitOfWork);
+            => obj is null ? 0 : GetHashCode(obj as IUnitOfWork);
 
         public int GetHashCode(IUnitOfWork obj)
-            => RuntimeHelpers.GetHashCode(obj);
+            => obj is null ? 0 : RuntimeHelpers.GetHashCode(obj);
     }
 }

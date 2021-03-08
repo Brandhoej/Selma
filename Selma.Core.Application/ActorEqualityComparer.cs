@@ -57,7 +57,7 @@ namespace Selma.Core.Application
         }
 
         public int GetHashCode(object obj)
-            => obj is null ? 0 : obj.GetHashCode();
+            => obj is null ? 0 : GetHashCode(obj as IActor);
 
         public int GetHashCode(IActor obj)
         {

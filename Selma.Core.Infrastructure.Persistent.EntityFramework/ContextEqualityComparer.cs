@@ -1,6 +1,7 @@
 ﻿using Selma.Core.Infrastructure.Persistent.Abstractions;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace Selma.Core.Infrastructure.Persistent.EntityFramework
 {
@@ -55,9 +56,9 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IContext);
+            => obj is null ? 0 : GetHashCode(obj as IContext);
 
         public int GetHashCode(IContext obj)
-            => obj.GetHashCode();
+            => obj is null ? 0 : RuntimeHelpers.GetHashCode(obj);
     }
 }

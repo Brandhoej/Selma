@@ -16,7 +16,12 @@ namespace Selma.Core.Domain.Events
     {
         public new bool Equals(object x, object y)
         {
-            if (x is null || y is null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -31,7 +36,12 @@ namespace Selma.Core.Domain.Events
 
         public bool Equals(IDomainEventHandler<T> x, IDomainEventHandler<T> y)
         {
-            if (x is null || y is null)
+            if (x is null)
+            {
+                return false;
+            }
+
+            if (y is null)
             {
                 return false;
             }
@@ -50,9 +60,9 @@ namespace Selma.Core.Domain.Events
         }
 
         public int GetHashCode(object obj)
-            => obj is null ? 0 : obj.GetHashCode();
+            => obj is null ? 0 : GetHashCode(obj as IDomainEventHandler<T>);
 
         public int GetHashCode(IDomainEventHandler<T> obj)
-            => RuntimeHelpers.GetHashCode(obj);
+            => obj is null ? 0 : RuntimeHelpers.GetHashCode(obj);
     }
 }
