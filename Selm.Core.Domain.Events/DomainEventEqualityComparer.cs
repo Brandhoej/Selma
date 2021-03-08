@@ -55,7 +55,7 @@ namespace Selma.Core.Domain.Events
         }
 
         public int GetHashCode(object obj)
-            => obj is null ? 0 : GetHashCode(obj as IDomainEvent)
+            => obj is null ? 0 : GetHashCode(obj as IDomainEvent);
 
         public int GetHashCode(IDomainEvent obj)
             => obj is null ? 0 : RuntimeHelpers.GetHashCode(obj);
