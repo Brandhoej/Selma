@@ -11,7 +11,7 @@ namespace Selma.Core.Infrastructure.Persistent
         , IContext
     {
         public AbstractRepositoryFactory(TContext context)
-            => Context = context;
+            => Context = context ?? throw new ArgumentNullException(nameof(context));
 
         protected TContext Context { get; }
 

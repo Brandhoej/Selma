@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Selma.Core.Infrastructure.Persistent.Abstractions;
@@ -58,7 +59,7 @@ namespace Selma.Core.Infrastructure.Persistent
         }
 
         public int GetHashCode(object obj)
-            => GetHashCode(obj as IUnitOfWork);
+            => GetHashCode((obj ?? throw new ArgumentNullException(nameof(obj)))as IUnitOfWork);
 
         public int GetHashCode(IUnitOfWork obj)
             => RuntimeHelpers.GetHashCode(obj);

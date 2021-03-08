@@ -20,6 +20,6 @@ namespace Selma.Core.Infrastructure.Persistent.Abstractions
 
         int SaveChanges();
         ValueTask<int> SaveChangesAsync();
-        ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken);
+        ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

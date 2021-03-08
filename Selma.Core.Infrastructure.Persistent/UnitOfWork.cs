@@ -26,7 +26,7 @@ namespace Selma.Core.Infrastructure.Persistent
         public ValueTask<int> SaveChangesAsync()
             => Context.SaveChangesAsync();
 
-        public ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public ValueTask<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             => Context.SaveChangesAsync(cancellationToken);
 
         public override bool Equals(object obj)
