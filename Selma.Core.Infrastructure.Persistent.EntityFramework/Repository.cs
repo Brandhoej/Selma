@@ -21,7 +21,7 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         { }
     }
 
-    public class Repository<TEntity, TId> 
+    public class Repository<TEntity, TId>
         : IRepository<TEntity, TId>
         where TEntity 
         : class
@@ -81,11 +81,11 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
         public TEntity Read(TId key)
             => RootEntities.Find(key);
 
-        public ValueTask<TEntity> ReadAsync(TId key)
-            => ReadAsync(key, default);
-
         public IEnumerable<TEntity> ReadAll()
             => RootEntities;
+
+        public ValueTask<TEntity> ReadAsync(TId key)
+            => ReadAsync(key, default);
 
         public ValueTask<TEntity> ReadAsync(TId key, CancellationToken cancellationToken)
         {
@@ -128,8 +128,9 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             => RootEntities.RemoveRange(entities);
 
         public bool Equals(IRepository<TEntity, TId> other)
-        {
-            throw new NotImplementedException();
-        }
+            => new RepositoryEqualityComparer<TEntity, TId>().Equals(this, other);
+
+        public override int GetHashCode()
+            => new RepositoryEqualityComparer<TEntity, TId>().GetHashCode(this);
     }
 }

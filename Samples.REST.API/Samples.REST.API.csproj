@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Samples.REST.Application\Samples.REST.Application.csproj" />
     <ProjectReference Include="..\Samples.REST.Domain\Samples.REST.Domain.csproj" />
+    <ProjectReference Include="..\Selma.Core.Domain.Events\Selma.Core.Domain.Events.csproj" />
   </ItemGroup>
 
 

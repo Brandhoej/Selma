@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selm.Core.Domain.Events\Selma.Core.Domain.Events.csproj" />
     <ProjectReference Include="..\Selma.Core.Domain.Abstractions\Selma.Core.Domain.Abstractions.csproj" />
+    <ProjectReference Include="..\Selma.Core.Domain.Events\Selma.Core.Domain.Events.csproj" />
     <ProjectReference Include="..\Selma.Core.Domain\Selma.Core.Domain.csproj" />
     <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent.Abstractions\Selma.Core.Infrastructure.Persistent.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.Infrastructure.Persistent.EntityFramework\Selma.Core.Infrastructure.Persistent.EntityFramework.csproj">

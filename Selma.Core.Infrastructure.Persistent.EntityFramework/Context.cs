@@ -43,9 +43,6 @@ namespace Selma.Core.Infrastructure.Persistent.EntityFramework
             => new ContextEqualityComparer().Equals(this, other);
 
         public override int GetHashCode()
-            => base.GetHashCode();
-
-        public override string ToString()
-            => base.ToString();
+            => new ContextEqualityComparer().GetHashCode(this);
     }
 }

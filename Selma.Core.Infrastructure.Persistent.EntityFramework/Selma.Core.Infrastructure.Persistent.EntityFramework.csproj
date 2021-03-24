@@ -12,12 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Selm.Core.Domain.Events.Abstractions\Selma.Core.Domain.Events.Abstractions.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
     <ProjectReference Include="..\Selma.Core.Domain.Abstractions\Selma.Core.Domain.Abstractions.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
+    <ProjectReference Include="..\Selma.Core.Domain.Events.Abstractions\Selma.Core.Domain.Events.Abstractions.csproj" />
     <ProjectReference Include="..\Selma.Core.Infrastructure.Events.Abstractions\Selma.Core.Infrastructure.Events.Abstractions.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>

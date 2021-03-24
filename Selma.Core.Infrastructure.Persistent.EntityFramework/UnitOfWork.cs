@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace Samples.REST.Domain
 {
+    public class TestUnitOfWork<TContext>
+        : UnitOfWork<TContext>
+        where TContext
+        : Context
+        , IContext
+    {
+        public TestUnitOfWork(TContext context)
+            : base(context)
+        { }
+    }
+
     public class UnitOfWork<TContext>
         : IUnitOfWork
         where TContext
